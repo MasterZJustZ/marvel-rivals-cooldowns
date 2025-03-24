@@ -464,7 +464,7 @@
 </head>
 <body>
     <header>
-        <h1>Marvel Rivals Cooldown Tracker v1.5</h1>
+        <h1>Marvel Rivals Cooldown Tracker v1.4</h1>
     </header>
     
     <main>
@@ -498,8 +498,12 @@
             <h2>Important Cooldowns</h2>
             
             <div class="abilities-tabs">
-                <button class="ability-tab" data-tab="heroes">Heroes</button>
-                <button class="ability-tab active" data-tab="all">All Cooldowns</button>
+                <button class="ability-tab active" data-tab="cc">Crowd Control</button>
+                <button class="ability-tab" data-tab="defensive">Defensive</button>
+                <button class="ability-tab" data-tab="mobility">Mobility</button>
+                <button class="ability-tab" data-tab="healing">Healing</button>
+                <button class="ability-tab" data-tab="damage">Damage</button>
+                <button class="ability-tab" data-tab="utility">Utility</button>
             </div>
             
             <div class="ability-content" id="heroes-content">
@@ -1581,7 +1585,7 @@
     
     <footer>
         <div class="version-info">
-            <p>Marvel Rivals Cooldown Tracker v1.5 | Updated March 2025</p>
+            <p>Marvel Rivals Cooldown Tracker v1.4 | Updated March 2025</p>
         </div>
     </footer>
     
@@ -1904,97 +1908,29 @@
         
         // Update cooldown display based on selected heroes
         function updateCooldownDisplay() {
-            // Get selected hero names
-            const selectedHeroNames = selectedHeroes.map(hero => hero.name);
-            
-            // In "All Cooldowns" tab, show all cooldowns or filter by selected heroes
-            if (document.getElementById('all-content').classList.contains('active')) {
-                if (selectedHeroes.length === 0) {
-                    document.querySelectorAll('.cooldown-item').forEach(item => {
-                        item.style.display = 'flex';
-                    });
-                } else {
-                    // Show only cooldowns for selected heroes
-                    document.querySelectorAll('.cooldown-item').forEach(item => {
-                        const heroName = item.querySelector('.ability-hero').textContent;
-                        if (selectedHeroNames.some(name => heroName.includes(name))) {
-                            item.style.display = 'flex';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                }
-                
-                // Update category counts
-                updateCategoryCounts();
-            }
-            
-            // Update hero-specific cooldowns in "Heroes" tab
-            updateHeroesTab();
-        }
-        
-        // Generate and display hero-specific ability lists
-        function updateHeroesTab() {
-            const container = document.getElementById('hero-abilities-container');
-            container.innerHTML = '';
-            
+            // If no heroes are selected, show all cooldowns
             if (selectedHeroes.length === 0) {
-                container.innerHTML = '<div class="team-info"><p class="info-text">Select heroes to view their abilities</p></div>';
+                document.querySelectorAll('.cooldown-item').forEach(item => {
+                    item.style.display = 'flex';
+                });
                 return;
             }
             
-            // Create a section for each selected hero
-            selectedHeroes.forEach(hero => {
-                // Create hero section
-                const heroSection = document.createElement('div');
-                heroSection.className = 'cooldown-category';
-                
-                // Create header
-                const header = document.createElement('div');
-                header.className = 'category-header';
-                header.innerHTML = `
-                    <div class="category-title">
-                        <img src="${hero.image}" alt="${hero.name}" style="width: 30px; height: 30px; border-radius: 50%;">
-                        <h3>${hero.name}</h3>
-                    </div>
-                    <div class="hero-role" style="opacity: 0.7; text-transform: capitalize;">${hero.category}</div>
-                `;
-                
-                // Create content container
-                const content = document.createElement('div');
-                content.className = 'category-content expand';
-                
-                // Get abilities for this hero
-                const abilities = [];
-                document.querySelectorAll('.cooldown-item').forEach(item => {
-                    const itemHeroName = item.querySelector('.ability-hero').textContent;
-                    if (itemHeroName === hero.name) {
-                        // Clone the item
-                        const abilityClone = item.cloneNode(true);
-                        abilities.push(abilityClone);
-                    }
-                });
-                
-                if (abilities.length === 0) {
-                    content.innerHTML = '<p class="info-text">No ability data available</p>';
+            // Get selected hero names
+            const selectedHeroNames = selectedHeroes.map(hero => hero.name.toLowerCase());
+            
+            // Show only cooldowns for selected heroes
+            document.querySelectorAll('.cooldown-item').forEach(item => {
+                const heroName = item.querySelector('.ability-hero').textContent.toLowerCase();
+                if (selectedHeroNames.some(name => heroName.includes(name))) {
+                    item.style.display = 'flex';
                 } else {
-                    // Create list
-                    const list = document.createElement('ul');
-                    list.className = 'cooldown-list';
-                    
-                    // Add abilities to list
-                    abilities.forEach(ability => {
-                        list.appendChild(ability);
-                    });
-                    
-                    content.appendChild(list);
+                    item.style.display = 'none';
                 }
-                
-                // Assemble hero section
-                heroSection.appendChild(header);
-                heroSection.appendChild(content);
-                container.appendChild(heroSection);
             });
+            
+            // Update category counts
+            updateCategoryCounts();
         }
         
         // Update category counts based on visible items
@@ -2134,9 +2070,6 @@
             
             // Calculate and display initial category counts
             updateCategoryCounts();
-            
-            // Initialize the heroes tab
-            updateHeroesTab();
         }
         
         // Start the app

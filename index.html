@@ -6,10 +6,10 @@
     <title>Marvel Rivals Cooldown Tracker</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
-        .hero-icon{width:60px;height:60px;background-size:cover;cursor:pointer;transition:all .2s;opacity:.6;position:relative}
+        .hero-icon{width:80px;height:80px;background-size:cover;cursor:pointer;transition:all .2s;opacity:.6;position:relative;margin:auto;}
         .hero-icon:hover{transform:scale(1.1);opacity:.8}
-        .hero-icon.selected{opacity:1;box-shadow:0 0 0 2px #f59e0b}
-        .hero-name{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .hero-icon.selected{opacity:1;box-shadow:0 0 0 3px #f59e0b}
+        .hero-name{position:absolute;bottom:-25px;left:0;right:0;text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .selected-filter{background-color:#4B5563!important;font-weight:700}
         .cooldown-text{font-size:12px;text-align:center;padding:2px 5px;border-radius:4px}
     </style>
@@ -17,24 +17,20 @@
 <body class="bg-gray-900 text-white min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-4xl font-bold text-center mb-2">Marvel Rivals Cooldown Tracker</h1>
-        <p class="text-center text-gray-400 mb-8">Select enemy heroes to track their cooldowns</p>
+        <p class="text-center text-gray-400 mb-8">Select heroes to track their cooldowns</p>
         <div class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Select Enemy Heroes</h2>
+            <h2 class="text-2xl font-bold mb-4">Select Heroes</h2>
             <div class="mb-4 flex gap-2">
                 <button id="filter-all" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md selected-filter">All</button>
                 <button id="filter-duelist" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Duelist</button>
                 <button id="filter-vanguard" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Vanguard</button>
                 <button id="filter-strategist" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Strategist</button>
             </div>
-            <div class="hero-selection grid grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2"></div>
+            <div class="hero-selection grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 mb-12"></div>
         </div>
         <div class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Enemy Team</h2>
-            <div id="selected-heroes" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
-        </div>
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Enemy Abilities</h2>
-            <div id="hero-abilities" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
+            <h2 class="text-2xl font-bold mb-4">Hero Abilities</h2>
+            <div id="hero-abilities" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4"></div>
         </div>
     </div>
     <footer class="bg-gray-800 text-center py-4 mt-12">
@@ -44,44 +40,44 @@
         // Hero data - sorted alphabetically within each role
         const heroes = [
             // Duelists
-            {id:'black-panther',name:'Black Panther',icon:'https://via.placeholder.com/60x60?text=BP',role:'Duelist'},
-            {id:'black-widow',name:'Black Widow',icon:'https://via.placeholder.com/60x60?text=BW',role:'Duelist'},
-            {id:'hawkeye',name:'Hawkeye',icon:'https://via.placeholder.com/60x60?text=HE',role:'Duelist'},
-            {id:'hela',name:'Hela',icon:'https://via.placeholder.com/60x60?text=HE',role:'Duelist'},
-            {id:'human-torch',name:'Human Torch',icon:'https://via.placeholder.com/60x60?text=HT',role:'Duelist'},
-            {id:'iron-fist',name:'Iron Fist',icon:'https://via.placeholder.com/60x60?text=IF',role:'Duelist'},
-            {id:'iron-man',name:'Iron Man',icon:'https://via.placeholder.com/60x60?text=IM',role:'Duelist'},
-            {id:'magik',name:'Magik',icon:'https://via.placeholder.com/60x60?text=MG',role:'Duelist'},
-            {id:'moon-knight',name:'Moon Knight',icon:'https://via.placeholder.com/60x60?text=MK',role:'Duelist'},
-            {id:'namor',name:'Namor',icon:'https://via.placeholder.com/60x60?text=NM',role:'Duelist'},
-            {id:'psylocke',name:'Psylocke',icon:'https://via.placeholder.com/60x60?text=PS',role:'Duelist'},
-            {id:'scarlet-witch',name:'Scarlet Witch',icon:'https://via.placeholder.com/60x60?text=SW',role:'Duelist'},
-            {id:'spider-man',name:'Spider-Man',icon:'https://via.placeholder.com/60x60?text=SM',role:'Duelist'},
-            {id:'squirrel-girl',name:'Squirrel Girl',icon:'https://via.placeholder.com/60x60?text=SG',role:'Duelist'},
-            {id:'star-lord',name:'Star-Lord',icon:'https://via.placeholder.com/60x60?text=SL',role:'Duelist'},
-            {id:'storm',name:'Storm',icon:'https://via.placeholder.com/60x60?text=ST',role:'Duelist'},
-            {id:'the-punisher',name:'The Punisher',icon:'https://via.placeholder.com/60x60?text=TP',role:'Duelist'},
-            {id:'winter-soldier',name:'Winter Soldier',icon:'https://via.placeholder.com/60x60?text=WS',role:'Duelist'},
-            {id:'wolverine',name:'Wolverine',icon:'https://via.placeholder.com/60x60?text=WV',role:'Duelist'},
+            {id:'black-panther',name:'Black Panther',icon:'https://via.placeholder.com/80x80?text=BP',role:'Duelist'},
+            {id:'black-widow',name:'Black Widow',icon:'https://via.placeholder.com/80x80?text=BW',role:'Duelist'},
+            {id:'hawkeye',name:'Hawkeye',icon:'https://via.placeholder.com/80x80?text=HE',role:'Duelist'},
+            {id:'hela',name:'Hela',icon:'https://via.placeholder.com/80x80?text=HE',role:'Duelist'},
+            {id:'human-torch',name:'Human Torch',icon:'https://via.placeholder.com/80x80?text=HT',role:'Duelist'},
+            {id:'iron-fist',name:'Iron Fist',icon:'https://via.placeholder.com/80x80?text=IF',role:'Duelist'},
+            {id:'iron-man',name:'Iron Man',icon:'https://via.placeholder.com/80x80?text=IM',role:'Duelist'},
+            {id:'magik',name:'Magik',icon:'https://via.placeholder.com/80x80?text=MG',role:'Duelist'},
+            {id:'moon-knight',name:'Moon Knight',icon:'https://via.placeholder.com/80x80?text=MK',role:'Duelist'},
+            {id:'namor',name:'Namor',icon:'https://via.placeholder.com/80x80?text=NM',role:'Duelist'},
+            {id:'psylocke',name:'Psylocke',icon:'https://via.placeholder.com/80x80?text=PS',role:'Duelist'},
+            {id:'scarlet-witch',name:'Scarlet Witch',icon:'https://via.placeholder.com/80x80?text=SW',role:'Duelist'},
+            {id:'spider-man',name:'Spider-Man',icon:'https://via.placeholder.com/80x80?text=SM',role:'Duelist'},
+            {id:'squirrel-girl',name:'Squirrel Girl',icon:'https://via.placeholder.com/80x80?text=SG',role:'Duelist'},
+            {id:'star-lord',name:'Star-Lord',icon:'https://via.placeholder.com/80x80?text=SL',role:'Duelist'},
+            {id:'storm',name:'Storm',icon:'https://via.placeholder.com/80x80?text=ST',role:'Duelist'},
+            {id:'the-punisher',name:'The Punisher',icon:'https://via.placeholder.com/80x80?text=TP',role:'Duelist'},
+            {id:'winter-soldier',name:'Winter Soldier',icon:'https://via.placeholder.com/80x80?text=WS',role:'Duelist'},
+            {id:'wolverine',name:'Wolverine',icon:'https://via.placeholder.com/80x80?text=WV',role:'Duelist'},
             // Vanguards
-            {id:'captain-america',name:'Captain America',icon:'https://via.placeholder.com/60x60?text=CA',role:'Vanguard'},
-            {id:'doctor-strange',name:'Doctor Strange',icon:'https://via.placeholder.com/60x60?text=DS',role:'Vanguard'},
-            {id:'groot',name:'Groot',icon:'https://via.placeholder.com/60x60?text=GR',role:'Vanguard'},
-            {id:'hulk',name:'Hulk',icon:'https://via.placeholder.com/60x60?text=HK',role:'Vanguard'},
-            {id:'magneto',name:'Magneto',icon:'https://via.placeholder.com/60x60?text=MN',role:'Vanguard'},
-            {id:'peni-parker',name:'Peni Parker',icon:'https://via.placeholder.com/60x60?text=PP',role:'Vanguard'},
-            {id:'the-thing',name:'The Thing',icon:'https://via.placeholder.com/60x60?text=TT',role:'Vanguard'},
-            {id:'thor',name:'Thor',icon:'https://via.placeholder.com/60x60?text=TH',role:'Vanguard'},
-            {id:'venom',name:'Venom',icon:'https://via.placeholder.com/60x60?text=VN',role:'Vanguard'},
+            {id:'captain-america',name:'Captain America',icon:'https://via.placeholder.com/80x80?text=CA',role:'Vanguard'},
+            {id:'doctor-strange',name:'Doctor Strange',icon:'https://via.placeholder.com/80x80?text=DS',role:'Vanguard'},
+            {id:'groot',name:'Groot',icon:'https://via.placeholder.com/80x80?text=GR',role:'Vanguard'},
+            {id:'hulk',name:'Hulk',icon:'https://via.placeholder.com/80x80?text=HK',role:'Vanguard'},
+            {id:'magneto',name:'Magneto',icon:'https://via.placeholder.com/80x80?text=MN',role:'Vanguard'},
+            {id:'peni-parker',name:'Peni Parker',icon:'https://via.placeholder.com/80x80?text=PP',role:'Vanguard'},
+            {id:'the-thing',name:'The Thing',icon:'https://via.placeholder.com/80x80?text=TT',role:'Vanguard'},
+            {id:'thor',name:'Thor',icon:'https://via.placeholder.com/80x80?text=TH',role:'Vanguard'},
+            {id:'venom',name:'Venom',icon:'https://via.placeholder.com/80x80?text=VN',role:'Vanguard'},
             // Strategists
-            {id:'adam-warlock',name:'Adam Warlock',icon:'https://via.placeholder.com/60x60?text=AW',role:'Strategist'},
-            {id:'cloak-and-dagger',name:'Cloak & Dagger',icon:'https://via.placeholder.com/60x60?text=CD',role:'Strategist'},
-            {id:'invisible-woman',name:'Invisible Woman',icon:'https://via.placeholder.com/60x60?text=IW',role:'Strategist'},
-            {id:'jeff-the-land-shark',name:'Jeff The Land Shark',icon:'https://via.placeholder.com/60x60?text=JF',role:'Strategist'},
-            {id:'loki',name:'Loki',icon:'https://via.placeholder.com/60x60?text=LK',role:'Strategist'},
-            {id:'luna-snow',name:'Luna Snow',icon:'https://via.placeholder.com/60x60?text=LS',role:'Strategist'},
-            {id:'mantis',name:'Mantis',icon:'https://via.placeholder.com/60x60?text=MT',role:'Strategist'},
-            {id:'rocket-racoon',name:'Rocket Racoon',icon:'https://via.placeholder.com/60x60?text=RR',role:'Strategist'},
+            {id:'adam-warlock',name:'Adam Warlock',icon:'https://via.placeholder.com/80x80?text=AW',role:'Strategist'},
+            {id:'cloak-and-dagger',name:'Cloak & Dagger',icon:'https://via.placeholder.com/80x80?text=CD',role:'Strategist'},
+            {id:'invisible-woman',name:'Invisible Woman',icon:'https://via.placeholder.com/80x80?text=IW',role:'Strategist'},
+            {id:'jeff-the-land-shark',name:'Jeff',icon:'https://via.placeholder.com/80x80?text=JF',role:'Strategist'},
+            {id:'loki',name:'Loki',icon:'https://via.placeholder.com/80x80?text=LK',role:'Strategist'},
+            {id:'luna-snow',name:'Luna Snow',icon:'https://via.placeholder.com/80x80?text=LS',role:'Strategist'},
+            {id:'mantis',name:'Mantis',icon:'https://via.placeholder.com/80x80?text=MT',role:'Strategist'},
+            {id:'rocket-racoon',name:'Rocket Racoon',icon:'https://via.placeholder.com/80x80?text=RR',role:'Strategist'},
         ];
 
         // Ability data - crowd control
@@ -152,7 +148,7 @@
             
             sortedHeroes.forEach(hero => {
                 const heroDiv = document.createElement('div');
-                heroDiv.className = 'hero-icon rounded-lg mb-6';
+                heroDiv.className = 'hero-icon rounded-lg mb-8';
                 heroDiv.style.backgroundImage = `url(${hero.icon})`;
                 heroDiv.setAttribute('data-id', hero.id);
                 heroDiv.setAttribute('data-role', hero.role);
@@ -179,43 +175,11 @@
                         heroDiv.classList.add('selected');
                         selectedHeroes.push(hero);
                     }
-                    updateSelectedHeroes();
                     updateAbilities();
                 });
                 
                 heroSelectionDiv.appendChild(heroDiv);
             });
-        }
-        
-        function updateSelectedHeroes() {
-            const selectedHeroesDiv = document.getElementById('selected-heroes');
-            selectedHeroesDiv.innerHTML = '';
-            
-            if (selectedHeroes.length === 0) {
-                const emptyMsg = document.createElement('div');
-                emptyMsg.className = 'col-span-full text-center text-gray-500';
-                emptyMsg.textContent = 'No heroes selected. Select enemy heroes above.';
-                selectedHeroesDiv.appendChild(emptyMsg);
-                return;
-            }
-            
-            selectedHeroes.forEach(hero => {
-                const heroCard = document.createElement('div');
-                heroCard.className = 'bg-gray-800 rounded-lg p-4 flex flex-col items-center';
-                heroCard.innerHTML = `
-                    <div class="hero-icon mb-2" style="background-image: url(${hero.icon})"></div>
-                    <h3 class="font-bold">${hero.name}</h3>
-                    <span class="text-xs text-gray-400">${hero.role}</span>
-                `;
-                selectedHeroesDiv.appendChild(heroCard);
-            });
-            
-            for (let i = selectedHeroes.length; i < maxSelectedHeroes; i++) {
-                const emptySlot = document.createElement('div');
-                emptySlot.className = 'bg-gray-800 bg-opacity-30 rounded-lg p-4 flex flex-col items-center justify-center border border-dashed border-gray-700';
-                emptySlot.innerHTML = `<div class="text-gray-500 text-center">Empty Slot</div>`;
-                selectedHeroesDiv.appendChild(emptySlot);
-            }
         }
 
         function createAbilityCard(ability) {
@@ -271,7 +235,7 @@
             if (selectedHeroes.length === 0) {
                 const emptyMsg = document.createElement('div');
                 emptyMsg.className = 'col-span-full text-center text-gray-500';
-                emptyMsg.textContent = 'No abilities to display. Select enemy heroes above.';
+                emptyMsg.textContent = 'No abilities to display. Select heroes above.';
                 heroAbilitiesDiv.appendChild(emptyMsg);
                 return;
             }
@@ -331,13 +295,6 @@
                 
                 heroAbilitiesDiv.appendChild(heroColumn);
             });
-            
-            for (let i = selectedHeroes.length; i < maxSelectedHeroes; i++) {
-                const emptySlot = document.createElement('div');
-                emptySlot.className = 'bg-gray-800 bg-opacity-30 rounded-lg p-4 flex flex-col items-center justify-center border border-dashed border-gray-700';
-                emptySlot.innerHTML = `<div class="text-gray-500 text-center">Empty Slot</div>`;
-                heroAbilitiesDiv.appendChild(emptySlot);
-            }
         }
         
         // Filter buttons functionality
@@ -368,7 +325,6 @@
         
         // Initialize displays
         populateHeroes(heroes);
-        updateSelectedHeroes();
         updateAbilities();
     </script>
 </body>

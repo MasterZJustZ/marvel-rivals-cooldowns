@@ -6,224 +6,187 @@
     <title>Marvel Rivals Cooldown Tracker</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
-        .hero-icon {
-            width: 60px;
-            height: 60px;
-            background-size: cover;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            opacity: 0.6;
-        }
-        
-        .hero-icon:hover {
-            transform: scale(1.1);
-            opacity: 0.8;
-        }
-        
-        .hero-icon.selected {
-            opacity: 1;
-            box-shadow: 0 0 0 2px #f59e0b;
-        }
-        
-        .ability-card {
-            transition: all 0.3s ease;
-        }
-        
-        .cooldown-text {
-            font-size: 12px;
-            text-align: center;
-            padding: 2px 5px;
-            border-radius: 4px;
-        }
+        .hero-icon{width:60px;height:60px;background-size:cover;cursor:pointer;transition:all .2s;opacity:.6;position:relative}
+        .hero-icon:hover{transform:scale(1.1);opacity:.8}
+        .hero-icon.selected{opacity:1;box-shadow:0 0 0 2px #f59e0b}
+        .hero-name{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .selected-filter{background-color:#4B5563!important;font-weight:700}
+        .cooldown-text{font-size:12px;text-align:center;padding:2px 5px;border-radius:4px}
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-4xl font-bold text-center mb-2">Marvel Rivals Cooldown Tracker</h1>
         <p class="text-center text-gray-400 mb-8">Select enemy heroes to track their cooldowns</p>
-
-        <!-- Hero Selection -->
         <div class="mb-8">
             <h2 class="text-2xl font-bold mb-4">Select Enemy Heroes</h2>
-            <div class="hero-selection grid grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2">
-                <!-- Hero icons will be populated here -->
+            <div class="mb-4 flex gap-2">
+                <button id="filter-all" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md selected-filter">All</button>
+                <button id="filter-duelist" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Duelist</button>
+                <button id="filter-vanguard" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Vanguard</button>
+                <button id="filter-strategist" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Strategist</button>
             </div>
+            <div class="hero-selection grid grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2"></div>
         </div>
-
-        <!-- Enemy Team Display -->
         <div class="mb-8">
             <h2 class="text-2xl font-bold mb-4">Enemy Team</h2>
-            <div id="selected-heroes" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <!-- Selected heroes will be displayed here -->
-            </div>
+            <div id="selected-heroes" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
         </div>
-
-        <!-- Crowd Control Abilities -->
         <div class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Crowd Control Abilities</h2>
-            <div id="cc-abilities" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- CC abilities will be displayed here -->
-            </div>
-        </div>
-
-        <!-- Defensive Abilities -->
-        <div>
-            <h2 class="text-2xl font-bold mb-4">Defensive Abilities</h2>
-            <div id="defensive-abilities" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Defensive abilities will be displayed here -->
-            </div>
+            <h2 class="text-2xl font-bold mb-4">Enemy Abilities</h2>
+            <div id="hero-abilities" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
         </div>
     </div>
-
     <footer class="bg-gray-800 text-center py-4 mt-12">
         <p class="text-gray-400">Marvel Rivals Cooldown Tracker | <a href="https://github.com/yourusername/marvel-rivals-cooldowns" class="text-yellow-400 hover:underline">GitHub</a></p>
     </footer>
-
     <script>
-        // Hero data
+        // Hero data - sorted alphabetically within each role
         const heroes = [
-            { id: 'black-panther', name: 'Black Panther', icon: 'https://via.placeholder.com/60x60?text=BP', role: 'Duelist' },
-            { id: 'black-widow', name: 'Black Widow', icon: 'https://via.placeholder.com/60x60?text=BW', role: 'Duelist' },
-            { id: 'hawkeye', name: 'Hawkeye', icon: 'https://via.placeholder.com/60x60?text=H', role: 'Duelist' },
-            { id: 'hela', name: 'Hela', icon: 'https://via.placeholder.com/60x60?text=HE', role: 'Duelist' },
-            { id: 'human-torch', name: 'Human Torch', icon: 'https://via.placeholder.com/60x60?text=HT', role: 'Duelist' },
-            { id: 'iron-fist', name: 'Iron Fist', icon: 'https://via.placeholder.com/60x60?text=IF', role: 'Duelist' },
-            { id: 'iron-man', name: 'Iron Man', icon: 'https://via.placeholder.com/60x60?text=IM', role: 'Duelist' },
-            { id: 'magik', name: 'Magik', icon: 'https://via.placeholder.com/60x60?text=MG', role: 'Duelist' },
-            { id: 'moon-knight', name: 'Moon Knight', icon: 'https://via.placeholder.com/60x60?text=MK', role: 'Duelist' },
-            { id: 'namor', name: 'Namor', icon: 'https://via.placeholder.com/60x60?text=NM', role: 'Duelist' },
-            { id: 'psylocke', name: 'Psylocke', icon: 'https://via.placeholder.com/60x60?text=PS', role: 'Duelist' },
-            { id: 'scarlet-witch', name: 'Scarlet Witch', icon: 'https://via.placeholder.com/60x60?text=SW', role: 'Duelist' },
-            { id: 'spider-man', name: 'Spider-Man', icon: 'https://via.placeholder.com/60x60?text=SM', role: 'Duelist' },
-            { id: 'squirrel-girl', name: 'Squirrel Girl', icon: 'https://via.placeholder.com/60x60?text=SG', role: 'Duelist' },
-            { id: 'star-lord', name: 'Star-Lord', icon: 'https://via.placeholder.com/60x60?text=SL', role: 'Duelist' },
-            { id: 'storm', name: 'Storm', icon: 'https://via.placeholder.com/60x60?text=ST', role: 'Duelist' },
-            { id: 'the-punisher', name: 'The Punisher', icon: 'https://via.placeholder.com/60x60?text=TP', role: 'Duelist' },
-            { id: 'winter-soldier', name: 'Winter Soldier', icon: 'https://via.placeholder.com/60x60?text=WS', role: 'Duelist' },
-            { id: 'wolverine', name: 'Wolverine', icon: 'https://via.placeholder.com/60x60?text=WV', role: 'Duelist' },
-            { id: 'hulk', name: 'Hulk', icon: 'https://via.placeholder.com/60x60?text=HK', role: 'Vanguard' },
-            { id: 'captain-america', name: 'Captain America', icon: 'https://via.placeholder.com/60x60?text=CA', role: 'Vanguard' },
-            { id: 'doctor-strange', name: 'Doctor Strange', icon: 'https://via.placeholder.com/60x60?text=DS', role: 'Vanguard' },
-            { id: 'groot', name: 'Groot', icon: 'https://via.placeholder.com/60x60?text=GR', role: 'Vanguard' },
-            { id: 'magneto', name: 'Magneto', icon: 'https://via.placeholder.com/60x60?text=MN', role: 'Vanguard' },
-            { id: 'peni-parker', name: 'Peni Parker', icon: 'https://via.placeholder.com/60x60?text=PP', role: 'Vanguard' },
-            { id: 'the-thing', name: 'The Thing', icon: 'https://via.placeholder.com/60x60?text=TT', role: 'Vanguard' },
-            { id: 'thor', name: 'Thor', icon: 'https://via.placeholder.com/60x60?text=TH', role: 'Vanguard' },
-            { id: 'venom', name: 'Venom', icon: 'https://via.placeholder.com/60x60?text=VN', role: 'Vanguard' },
-            { id: 'adam-warlock', name: 'Adam Warlock', icon: 'https://via.placeholder.com/60x60?text=AW', role: 'Strategist' },
-            { id: 'cloak-and-dagger', name: 'Cloak & Dagger', icon: 'https://via.placeholder.com/60x60?text=CD', role: 'Strategist' },
-            { id: 'invisible-woman', name: 'Invisible Woman', icon: 'https://via.placeholder.com/60x60?text=IW', role: 'Strategist' },
-            { id: 'jeff-the-land-shark', name: 'Jeff The Land Shark', icon: 'https://via.placeholder.com/60x60?text=JF', role: 'Strategist' },
-            { id: 'loki', name: 'Loki', icon: 'https://via.placeholder.com/60x60?text=LK', role: 'Strategist' },
-            { id: 'luna-snow', name: 'Luna Snow', icon: 'https://via.placeholder.com/60x60?text=LS', role: 'Strategist' },
-            { id: 'mantis', name: 'Mantis', icon: 'https://via.placeholder.com/60x60?text=MT', role: 'Strategist' },
-            { id: 'rocket-racoon', name: 'Rocket Racoon', icon: 'https://via.placeholder.com/60x60?text=RR', role: 'Strategist' },
+            // Duelists
+            {id:'black-panther',name:'Black Panther',icon:'https://via.placeholder.com/60x60?text=BP',role:'Duelist'},
+            {id:'black-widow',name:'Black Widow',icon:'https://via.placeholder.com/60x60?text=BW',role:'Duelist'},
+            {id:'hawkeye',name:'Hawkeye',icon:'https://via.placeholder.com/60x60?text=HE',role:'Duelist'},
+            {id:'hela',name:'Hela',icon:'https://via.placeholder.com/60x60?text=HE',role:'Duelist'},
+            {id:'human-torch',name:'Human Torch',icon:'https://via.placeholder.com/60x60?text=HT',role:'Duelist'},
+            {id:'iron-fist',name:'Iron Fist',icon:'https://via.placeholder.com/60x60?text=IF',role:'Duelist'},
+            {id:'iron-man',name:'Iron Man',icon:'https://via.placeholder.com/60x60?text=IM',role:'Duelist'},
+            {id:'magik',name:'Magik',icon:'https://via.placeholder.com/60x60?text=MG',role:'Duelist'},
+            {id:'moon-knight',name:'Moon Knight',icon:'https://via.placeholder.com/60x60?text=MK',role:'Duelist'},
+            {id:'namor',name:'Namor',icon:'https://via.placeholder.com/60x60?text=NM',role:'Duelist'},
+            {id:'psylocke',name:'Psylocke',icon:'https://via.placeholder.com/60x60?text=PS',role:'Duelist'},
+            {id:'scarlet-witch',name:'Scarlet Witch',icon:'https://via.placeholder.com/60x60?text=SW',role:'Duelist'},
+            {id:'spider-man',name:'Spider-Man',icon:'https://via.placeholder.com/60x60?text=SM',role:'Duelist'},
+            {id:'squirrel-girl',name:'Squirrel Girl',icon:'https://via.placeholder.com/60x60?text=SG',role:'Duelist'},
+            {id:'star-lord',name:'Star-Lord',icon:'https://via.placeholder.com/60x60?text=SL',role:'Duelist'},
+            {id:'storm',name:'Storm',icon:'https://via.placeholder.com/60x60?text=ST',role:'Duelist'},
+            {id:'the-punisher',name:'The Punisher',icon:'https://via.placeholder.com/60x60?text=TP',role:'Duelist'},
+            {id:'winter-soldier',name:'Winter Soldier',icon:'https://via.placeholder.com/60x60?text=WS',role:'Duelist'},
+            {id:'wolverine',name:'Wolverine',icon:'https://via.placeholder.com/60x60?text=WV',role:'Duelist'},
+            // Vanguards
+            {id:'captain-america',name:'Captain America',icon:'https://via.placeholder.com/60x60?text=CA',role:'Vanguard'},
+            {id:'doctor-strange',name:'Doctor Strange',icon:'https://via.placeholder.com/60x60?text=DS',role:'Vanguard'},
+            {id:'groot',name:'Groot',icon:'https://via.placeholder.com/60x60?text=GR',role:'Vanguard'},
+            {id:'hulk',name:'Hulk',icon:'https://via.placeholder.com/60x60?text=HK',role:'Vanguard'},
+            {id:'magneto',name:'Magneto',icon:'https://via.placeholder.com/60x60?text=MN',role:'Vanguard'},
+            {id:'peni-parker',name:'Peni Parker',icon:'https://via.placeholder.com/60x60?text=PP',role:'Vanguard'},
+            {id:'the-thing',name:'The Thing',icon:'https://via.placeholder.com/60x60?text=TT',role:'Vanguard'},
+            {id:'thor',name:'Thor',icon:'https://via.placeholder.com/60x60?text=TH',role:'Vanguard'},
+            {id:'venom',name:'Venom',icon:'https://via.placeholder.com/60x60?text=VN',role:'Vanguard'},
+            // Strategists
+            {id:'adam-warlock',name:'Adam Warlock',icon:'https://via.placeholder.com/60x60?text=AW',role:'Strategist'},
+            {id:'cloak-and-dagger',name:'Cloak & Dagger',icon:'https://via.placeholder.com/60x60?text=CD',role:'Strategist'},
+            {id:'invisible-woman',name:'Invisible Woman',icon:'https://via.placeholder.com/60x60?text=IW',role:'Strategist'},
+            {id:'jeff-the-land-shark',name:'Jeff The Land Shark',icon:'https://via.placeholder.com/60x60?text=JF',role:'Strategist'},
+            {id:'loki',name:'Loki',icon:'https://via.placeholder.com/60x60?text=LK',role:'Strategist'},
+            {id:'luna-snow',name:'Luna Snow',icon:'https://via.placeholder.com/60x60?text=LS',role:'Strategist'},
+            {id:'mantis',name:'Mantis',icon:'https://via.placeholder.com/60x60?text=MT',role:'Strategist'},
+            {id:'rocket-racoon',name:'Rocket Racoon',icon:'https://via.placeholder.com/60x60?text=RR',role:'Strategist'},
         ];
 
         // Ability data - crowd control
         const ccAbilities = [
             // Stuns
-            { heroId: 'hulk', name: "World Breaker", description: "Stuns a single target for 5 seconds", cooldown: "Ultimate", type: "Stun", category: "cc" },
-            { heroId: 'doctor-strange', name: "Eye of Agamotto", description: "Stuns enemies for 3 seconds", cooldown: "Ultimate", type: "Stun", category: "cc" },
-            { heroId: 'peni-parker', name: "Cyber Web Snare", description: "Stuns for 1 second", cooldown: "4s", type: "Stun", category: "cc" },
-            { heroId: 'hela', name: "Soul Drainer", description: "AoE stun for 0.5 seconds", cooldown: "12s", type: "Stun", category: "cc" },
-            { heroId: 'scarlet-witch', name: "Dark Seal", description: "AoE that stuns for 0.5 seconds periodically", cooldown: "12s", type: "Stun", category: "cc" },
-            { heroId: 'luna-snow', name: "Absolute Zero", description: "Stuns for 3 seconds", cooldown: "11s", type: "Stun", category: "cc" },
-            
+            {heroId:'hulk',name:"World Breaker",description:"Stuns a single target for 5 seconds",cooldown:"Ultimate",type:"Stun",category:"cc"},
+            {heroId:'doctor-strange',name:"Eye of Agamotto",description:"Stuns enemies for 3 seconds",cooldown:"Ultimate",type:"Stun",category:"cc"},
+            {heroId:'peni-parker',name:"Cyber Web Snare",description:"Stuns for 1 second",cooldown:"4s",type:"Stun",category:"cc"},
+            {heroId:'hela',name:"Soul Drainer",description:"AoE stun for 0.5 seconds",cooldown:"12s",type:"Stun",category:"cc"},
+            {heroId:'scarlet-witch',name:"Dark Seal",description:"AoE that stuns for 0.5 seconds periodically",cooldown:"12s",type:"Stun",category:"cc"},
+            {heroId:'luna-snow',name:"Absolute Zero",description:"Stuns for 3 seconds",cooldown:"11s",type:"Stun",category:"cc"},
             // Sleeps
-            { heroId: 'hulk', name: "Radioactive Lockdown", description: "Puts enemy to sleep for 3 seconds", cooldown: "15s", type: "Sleep", category: "cc" },
-            { heroId: 'mantis', name: "Spore Slumber", description: "Puts enemy to sleep for 4 seconds", cooldown: "15s", type: "Sleep", category: "cc" },
-            
+            {heroId:'hulk',name:"Radioactive Lockdown",description:"Puts enemy to sleep for 3 seconds",cooldown:"15s",type:"Sleep",category:"cc"},
+            {heroId:'mantis',name:"Spore Slumber",description:"Puts enemy to sleep for 4 seconds",cooldown:"15s",type:"Sleep",category:"cc"},
             // Roots
-            { heroId: 'groot', name: "Strangling Prison", description: "Roots enemies for 4 seconds", cooldown: "Ultimate", type: "Root", category: "cc" },
-            { heroId: 'squirrel-girl', name: "Squirrel Blockade", description: "Roots for 2 seconds", cooldown: "8s", type: "Root", category: "cc" },
-            
+            {heroId:'groot',name:"Strangling Prison",description:"Roots enemies for 4 seconds",cooldown:"Ultimate",type:"Root",category:"cc"},
+            {heroId:'squirrel-girl',name:"Squirrel Blockade",description:"Roots for 2 seconds",cooldown:"8s",type:"Root",category:"cc"},
             // Major Displacements
-            { heroId: 'hulk', name: "Incredible Leap", description: "Knocks down flying enemies", cooldown: "None", type: "Displacement", category: "cc" },
-            { heroId: 'thor', name: "Storm Surge", description: "Grabs and carries enemy", cooldown: "2s", type: "Displacement", category: "cc" },
-            { heroId: 'spider-man', name: "Get Over Here!", description: "Pulls enemy to Spider-Man", cooldown: "7s", type: "Displacement", category: "cc" },
-            { heroId: 'hawkeye', name: "Hypersonic Arrow", description: "Knocks down flying heroes", cooldown: "12s", type: "Displacement", category: "cc" },
-            { heroId: 'winter-soldier', name: "Bionic Hook", description: "Grabs and pulls enemy", cooldown: "8s", type: "Displacement", category: "cc" },
-            { heroId: 'winter-soldier', name: "Trooper Fist", description: "Grabs enemy and launches up", cooldown: "12s", type: "Displacement", category: "cc" },
-            { heroId: 'winter-soldier', name: "Tainted Voltage", description: "Knocks down flying enemies", cooldown: "6s", type: "Displacement", category: "cc" },
-            { heroId: 'wolverine', name: "Feral Leap", description: "Grabs enemy and slams them", cooldown: "12s", type: "Displacement", category: "cc" },
-            { heroId: 'jeff-the-land-shark', name: "It's Jeff!", description: "Swallows enemies for 6 seconds", cooldown: "Ultimate", type: "Displacement", category: "cc" },
-            
+            {heroId:'hulk',name:"Incredible Leap",description:"Knocks down flying enemies",cooldown:"None",type:"Displacement",category:"cc"},
+            {heroId:'thor',name:"Storm Surge",description:"Grabs and carries enemy",cooldown:"2s",type:"Displacement",category:"cc"},
+            {heroId:'spider-man',name:"Get Over Here!",description:"Pulls enemy to Spider-Man",cooldown:"7s",type:"Displacement",category:"cc"},
+            {heroId:'hawkeye',name:"Hypersonic Arrow",description:"Knocks down flying heroes",cooldown:"12s",type:"Displacement",category:"cc"},
+            {heroId:'winter-soldier',name:"Bionic Hook",description:"Grabs and pulls enemy",cooldown:"8s",type:"Displacement",category:"cc"},
+            {heroId:'winter-soldier',name:"Trooper Fist",description:"Grabs enemy and launches up",cooldown:"12s",type:"Displacement",category:"cc"},
+            {heroId:'winter-soldier',name:"Tainted Voltage",description:"Knocks down flying enemies",cooldown:"6s",type:"Displacement",category:"cc"},
+            {heroId:'wolverine',name:"Feral Leap",description:"Grabs enemy and slams them",cooldown:"12s",type:"Displacement",category:"cc"},
+            {heroId:'jeff-the-land-shark',name:"It's Jeff!",description:"Swallows enemies for 6 seconds",cooldown:"Ultimate",type:"Displacement",category:"cc"},
             // Slows
-            { heroId: 'venom', name: "Cellular Corrosion", description: "Slows enemy while grabbed", cooldown: "8s", type: "Slow", category: "cc" },
-            { heroId: 'hawkeye', name: "Hypersonic Arrow", description: "Slows enemies", cooldown: "12s", type: "Slow", category: "cc" },
-            { heroId: 'storm', name: "Goddess Boost", description: "Slows enemies in aura", cooldown: "15s", type: "Slow", category: "cc" },
-            { heroId: 'black-widow', name: "Electro-Plasma Explosion", description: "Slows enemies significantly", cooldown: "Ultimate", type: "Slow", category: "cc" },
-            { heroId: 'winter-soldier', name: "Tainted Voltage", description: "Slows enemies", cooldown: "6s", type: "Slow", category: "cc" },
-            
+            {heroId:'venom',name:"Cellular Corrosion",description:"Slows enemy while grabbed",cooldown:"8s",type:"Slow",category:"cc"},
+            {heroId:'hawkeye',name:"Hypersonic Arrow",description:"Slows enemies",cooldown:"12s",type:"Slow",category:"cc"},
+            {heroId:'storm',name:"Goddess Boost",description:"Slows enemies in aura",cooldown:"15s",type:"Slow",category:"cc"},
+            {heroId:'black-widow',name:"Electro-Plasma Explosion",description:"Slows enemies significantly",cooldown:"Ultimate",type:"Slow",category:"cc"},
+            {heroId:'winter-soldier',name:"Tainted Voltage",description:"Slows enemies",cooldown:"6s",type:"Slow",category:"cc"},
             // Blinds
-            { heroId: 'cloak-and-dagger', name: "Terror Cape", description: "Blinds enemies", cooldown: "12s", type: "Blind", category: "cc" },
-            { heroId: 'the-punisher', name: "Scourge Grenade", description: "Blocks enemy vision with smoke", cooldown: "8s", type: "Blind", category: "cc" },
+            {heroId:'cloak-and-dagger',name:"Terror Cape",description:"Blinds enemies",cooldown:"12s",type:"Blind",category:"cc"},
+            {heroId:'the-punisher',name:"Scourge Grenade",description:"Blocks enemy vision with smoke",cooldown:"8s",type:"Blind",category:"cc"},
         ];
 
         // Defensive abilities data
         const defensiveAbilities = [
             // Shields
-            { heroId: 'captain-america', name: "Living Legend", description: "Shield with 400 HP, deflects projectiles", cooldown: "Shield Recovery", type: "Shield", category: "defensive" },
-            { heroId: 'doctor-strange', name: "Shield of the Seraphim", description: "Large shield with 800 HP", cooldown: "Shield Recovery", type: "Shield", category: "defensive" },
-            { heroId: 'invisible-woman', name: "Guardian Shield", description: "Shield with 300 HP, heals allies", cooldown: "Shield Recovery", type: "Shield", category: "defensive" },
-            { heroId: 'magneto', name: "Metallic Curtain", description: "Unlimited shield for a short time", cooldown: "Energy Based", type: "Shield", category: "defensive" },
-            { heroId: 'magneto', name: "Metal Bulwark", description: "Shield with 300 HP for ally", cooldown: "12s", type: "Shield", category: "defensive" },
-            { heroId: 'magneto', name: "Iron Bulwark", description: "Shield with 300 HP for self", cooldown: "12s", type: "Shield", category: "defensive" },
-            
+            {heroId:'captain-america',name:"Living Legend",description:"Shield with 400 HP, deflects projectiles",cooldown:"Shield Recovery",type:"Shield",category:"defensive"},
+            {heroId:'doctor-strange',name:"Shield of the Seraphim",description:"Large shield with 800 HP",cooldown:"Shield Recovery",type:"Shield",category:"defensive"},
+            {heroId:'invisible-woman',name:"Guardian Shield",description:"Shield with 300 HP, heals allies",cooldown:"Shield Recovery",type:"Shield",category:"defensive"},
+            {heroId:'magneto',name:"Metallic Curtain",description:"Unlimited shield for a short time",cooldown:"Energy Based",type:"Shield",category:"defensive"},
+            {heroId:'magneto',name:"Metal Bulwark",description:"Shield with 300 HP for ally",cooldown:"12s",type:"Shield",category:"defensive"},
+            {heroId:'magneto',name:"Iron Bulwark",description:"Shield with 300 HP for self",cooldown:"12s",type:"Shield",category:"defensive"},
             // Damage Immunities
-            { heroId: 'scarlet-witch', name: "Mystic Projection", description: "Become invulnerable for 2s", cooldown: "8s (2 charges)", type: "Immunity", category: "defensive" },
-            { heroId: 'magik', name: "Stepping Discs", description: "Invulnerable during teleport", cooldown: "6s (2 charges)", type: "Immunity", category: "defensive" },
-            { heroId: 'venom', name: "Symbiotic Resilience", description: "Regenerate lost health", cooldown: "15s", type: "Healing", category: "defensive" },
-            { heroId: 'wolverine', name: "Regenerative Healing Factor", description: "Auto-resurrect when health reaches 0", cooldown: "90s", type: "Resurrection", category: "defensive" },
-            
+            {heroId:'scarlet-witch',name:"Mystic Projection",description:"Become invulnerable for 2s",cooldown:"8s (2 charges)",type:"Immunity",category:"defensive"},
+            {heroId:'magik',name:"Stepping Discs",description:"Invulnerable during teleport",cooldown:"6s (2 charges)",type:"Immunity",category:"defensive"},
+            {heroId:'venom',name:"Symbiotic Resilience",description:"Regenerate lost health",cooldown:"15s",type:"Healing",category:"defensive"},
+            {heroId:'wolverine',name:"Regenerative Healing Factor",description:"Auto-resurrect when health reaches 0",cooldown:"90s",type:"Resurrection",category:"defensive"},
             // Ultimates
-            { heroId: 'invisible-woman', name: "Invisible Boundary", description: "Makes allies invisible and provides healing", cooldown: "Ultimate", type: "Stealth", category: "defensive" },
-            { heroId: 'adam-warlock', name: "Karmic Revival", description: "Revives fallen allies", cooldown: "Ultimate", type: "Resurrection", category: "defensive" },
-            { heroId: 'rocket-racoon', name: "B.R.B.", description: "Beacon that revives a fallen ally", cooldown: "45s", type: "Resurrection", category: "defensive" },
-            { heroId: 'cloak-and-dagger', name: "Dark Teleportation", description: "Allies become invisible and untargetable", cooldown: "12s", type: "Stealth", category: "defensive" },
+            {heroId:'invisible-woman',name:"Invisible Boundary",description:"Makes allies invisible and provides healing",cooldown:"Ultimate",type:"Stealth",category:"defensive"},
+            {heroId:'adam-warlock',name:"Karmic Revival",description:"Revives fallen allies",cooldown:"Ultimate",type:"Resurrection",category:"defensive"},
+            {heroId:'rocket-racoon',name:"B.R.B.",description:"Beacon that revives a fallen ally",cooldown:"45s",type:"Resurrection",category:"defensive"},
+            {heroId:'cloak-and-dagger',name:"Dark Teleportation",description:"Allies become invisible and untargetable",cooldown:"12s",type:"Stealth",category:"defensive"},
         ];
 
-        // Selected heroes array
+        // Selected heroes array and functions
         let selectedHeroes = [];
         const maxSelectedHeroes = 6;
-
-        // Populate hero selection
         const heroSelectionDiv = document.querySelector('.hero-selection');
-        heroes.forEach(hero => {
-            const heroDiv = document.createElement('div');
-            heroDiv.className = 'hero-icon rounded-lg';
-            heroDiv.style.backgroundImage = `url(${hero.icon})`;
-            heroDiv.setAttribute('data-id', hero.id);
-            heroDiv.setAttribute('title', hero.name);
+        
+        function populateHeroes(filteredHeroes) {
+            heroSelectionDiv.innerHTML = '';
+            const sortedHeroes = [...filteredHeroes].sort((a, b) => a.name.localeCompare(b.name));
             
-            // Add click event
-            heroDiv.addEventListener('click', () => {
-                if (heroDiv.classList.contains('selected')) {
-                    // Deselect hero
-                    heroDiv.classList.remove('selected');
-                    selectedHeroes = selectedHeroes.filter(h => h.id !== hero.id);
-                } else {
-                    // Check if max heroes are already selected
-                    if (selectedHeroes.length >= maxSelectedHeroes) {
-                        alert(`You can only select up to ${maxSelectedHeroes} heroes.`);
-                        return;
-                    }
-                    
-                    // Select hero
+            sortedHeroes.forEach(hero => {
+                const heroDiv = document.createElement('div');
+                heroDiv.className = 'hero-icon rounded-lg mb-6';
+                heroDiv.style.backgroundImage = `url(${hero.icon})`;
+                heroDiv.setAttribute('data-id', hero.id);
+                heroDiv.setAttribute('data-role', hero.role);
+                heroDiv.setAttribute('title', hero.name);
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'hero-name';
+                nameSpan.textContent = hero.name;
+                heroDiv.appendChild(nameSpan);
+                
+                if (selectedHeroes.some(h => h.id === hero.id)) {
                     heroDiv.classList.add('selected');
-                    selectedHeroes.push(hero);
                 }
                 
-                // Update displays
-                updateSelectedHeroes();
-                updateAbilities();
+                heroDiv.addEventListener('click', () => {
+                    if (heroDiv.classList.contains('selected')) {
+                        heroDiv.classList.remove('selected');
+                        selectedHeroes = selectedHeroes.filter(h => h.id !== hero.id);
+                    } else {
+                        if (selectedHeroes.length >= maxSelectedHeroes) {
+                            alert(`You can only select up to ${maxSelectedHeroes} heroes.`);
+                            return;
+                        }
+                        heroDiv.classList.add('selected');
+                        selectedHeroes.push(hero);
+                    }
+                    updateSelectedHeroes();
+                    updateAbilities();
+                });
+                
+                heroSelectionDiv.appendChild(heroDiv);
             });
-            
-            heroSelectionDiv.appendChild(heroDiv);
-        });
-
-        // Update selected heroes display
+        }
+        
         function updateSelectedHeroes() {
             const selectedHeroesDiv = document.getElementById('selected-heroes');
             selectedHeroesDiv.innerHTML = '';
@@ -247,157 +210,164 @@
                 selectedHeroesDiv.appendChild(heroCard);
             });
             
-            // Add empty slots if needed
             for (let i = selectedHeroes.length; i < maxSelectedHeroes; i++) {
                 const emptySlot = document.createElement('div');
                 emptySlot.className = 'bg-gray-800 bg-opacity-30 rounded-lg p-4 flex flex-col items-center justify-center border border-dashed border-gray-700';
-                emptySlot.innerHTML = `
-                    <div class="text-gray-500 text-center">Empty Slot</div>
-                `;
+                emptySlot.innerHTML = `<div class="text-gray-500 text-center">Empty Slot</div>`;
                 selectedHeroesDiv.appendChild(emptySlot);
             }
         }
 
-        // Update abilities display
-        function updateAbilities() {
-            const ccAbilitiesDiv = document.getElementById('cc-abilities');
-            const defensiveAbilitiesDiv = document.getElementById('defensive-abilities');
-            
-            // Clear previous content
-            ccAbilitiesDiv.innerHTML = '';
-            defensiveAbilitiesDiv.innerHTML = '';
-            
-            if (selectedHeroes.length === 0) {
-                const ccEmptyMsg = document.createElement('div');
-                ccEmptyMsg.className = 'col-span-full text-center text-gray-500';
-                ccEmptyMsg.textContent = 'No abilities to display. Select enemy heroes above.';
-                ccAbilitiesDiv.appendChild(ccEmptyMsg);
-                
-                const defensiveEmptyMsg = document.createElement('div');
-                defensiveEmptyMsg.className = 'col-span-full text-center text-gray-500';
-                defensiveEmptyMsg.textContent = 'No abilities to display. Select enemy heroes above.';
-                defensiveAbilitiesDiv.appendChild(defensiveEmptyMsg);
-                return;
-            }
-            
-            // Get selected hero IDs
-            const selectedHeroIds = selectedHeroes.map(hero => hero.id);
-            
-            // Filter and display CC abilities
-            const relevantCCAbilities = ccAbilities.filter(ability => selectedHeroIds.includes(ability.heroId));
-            if (relevantCCAbilities.length === 0) {
-                const emptyMsg = document.createElement('div');
-                emptyMsg.className = 'col-span-full text-center text-gray-500';
-                emptyMsg.textContent = 'No crowd control abilities for selected heroes.';
-                ccAbilitiesDiv.appendChild(emptyMsg);
-            } else {
-                relevantCCAbilities.forEach(ability => {
-                    const hero = heroes.find(h => h.id === ability.heroId);
-                    const abilityCard = createAbilityCard(ability, hero);
-                    ccAbilitiesDiv.appendChild(abilityCard);
-                });
-            }
-            
-            // Filter and display Defensive abilities
-            const relevantDefensiveAbilities = defensiveAbilities.filter(ability => selectedHeroIds.includes(ability.heroId));
-            if (relevantDefensiveAbilities.length === 0) {
-                const emptyMsg = document.createElement('div');
-                emptyMsg.className = 'col-span-full text-center text-gray-500';
-                emptyMsg.textContent = 'No defensive abilities for selected heroes.';
-                defensiveAbilitiesDiv.appendChild(emptyMsg);
-            } else {
-                relevantDefensiveAbilities.forEach(ability => {
-                    const hero = heroes.find(h => h.id === ability.heroId);
-                    const abilityCard = createAbilityCard(ability, hero);
-                    defensiveAbilitiesDiv.appendChild(abilityCard);
-                });
-            }
-        }
-
-        // Create ability card
-        function createAbilityCard(ability, hero) {
+        function createAbilityCard(ability) {
             const card = document.createElement('div');
-            card.className = 'ability-card bg-gray-800 rounded-lg p-4 flex flex-col';
+            card.className = 'ability-card bg-gray-800 rounded-lg p-3 flex flex-col';
             
-            // Determine cooldown class for visual indication
             let cooldownClass = 'bg-gray-700';
-            
             if (ability.cooldown.includes('Ultimate')) {
                 cooldownClass = 'bg-purple-700';
             } else if (ability.cooldown.includes('None')) {
                 cooldownClass = 'bg-green-700';
             } else if (ability.cooldown.includes('s')) {
                 const seconds = parseInt(ability.cooldown);
-                if (seconds <= 5) {
-                    cooldownClass = 'bg-green-600';
-                } else if (seconds <= 10) {
-                    cooldownClass = 'bg-yellow-600';
-                } else {
-                    cooldownClass = 'bg-red-600';
-                }
+                if (seconds <= 5) cooldownClass = 'bg-green-600';
+                else if (seconds <= 10) cooldownClass = 'bg-yellow-600';
+                else cooldownClass = 'bg-red-600';
             }
             
-            // Determine type class for ability category
             let typeClass = '';
             switch(ability.type) {
-                case 'Stun':
-                    typeClass = 'bg-yellow-800 text-yellow-200';
-                    break;
-                case 'Sleep':
-                    typeClass = 'bg-blue-800 text-blue-200';
-                    break;
-                case 'Root':
-                    typeClass = 'bg-green-800 text-green-200';
-                    break;
-                case 'Displacement':
-                    typeClass = 'bg-purple-800 text-purple-200';
-                    break;
-                case 'Slow':
-                    typeClass = 'bg-indigo-800 text-indigo-200';
-                    break;
-                case 'Blind':
-                    typeClass = 'bg-gray-700 text-gray-200';
-                    break;
-                case 'Shield':
-                    typeClass = 'bg-blue-800 text-blue-200';
-                    break;
-                case 'Immunity':
-                    typeClass = 'bg-yellow-800 text-yellow-200';
-                    break;
-                case 'Resurrection':
-                    typeClass = 'bg-green-800 text-green-200';
-                    break;
-                case 'Stealth':
-                    typeClass = 'bg-purple-800 text-purple-200';
-                    break;
-                case 'Healing':
-                    typeClass = 'bg-red-800 text-red-200';
-                    break;
-                default:
-                    typeClass = 'bg-gray-700 text-gray-200';
+                case 'Stun': typeClass = 'bg-yellow-800 text-yellow-200'; break;
+                case 'Sleep': typeClass = 'bg-blue-800 text-blue-200'; break;
+                case 'Root': typeClass = 'bg-green-800 text-green-200'; break;
+                case 'Displacement': typeClass = 'bg-purple-800 text-purple-200'; break;
+                case 'Slow': typeClass = 'bg-indigo-800 text-indigo-200'; break;
+                case 'Blind': typeClass = 'bg-gray-700 text-gray-200'; break;
+                case 'Shield': typeClass = 'bg-blue-800 text-blue-200'; break;
+                case 'Immunity': typeClass = 'bg-yellow-800 text-yellow-200'; break;
+                case 'Resurrection': typeClass = 'bg-green-800 text-green-200'; break;
+                case 'Stealth': typeClass = 'bg-purple-800 text-purple-200'; break;
+                case 'Healing': typeClass = 'bg-red-800 text-red-200'; break;
+                default: typeClass = 'bg-gray-700 text-gray-200';
             }
             
             card.innerHTML = `
-                <div class="flex items-center mb-2">
-                    <div class="w-8 h-8 rounded-full bg-cover mr-2" style="background-image: url(${hero.icon})"></div>
-                    <div>
-                        <h4 class="font-bold">${hero.name}</h4>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between mb-2">
-                    <span class="font-semibold text-lg">${ability.name}</span>
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-semibold">${ability.name}</span>
                     <span class="cooldown-text ${cooldownClass}">${ability.cooldown}</span>
                 </div>
-                <div class="mb-2">
-                    <span class="text-sm px-2 py-1 rounded ${typeClass}">${ability.type}</span>
+                <div class="mb-1">
+                    <span class="text-xs px-2 py-1 rounded ${typeClass}">${ability.type}</span>
                 </div>
-                <p class="text-sm text-gray-300">${ability.description}</p>
+                <p class="text-xs text-gray-300">${ability.description}</p>
             `;
             
             return card;
         }
 
+        function updateAbilities() {
+            const heroAbilitiesDiv = document.getElementById('hero-abilities');
+            heroAbilitiesDiv.innerHTML = '';
+            
+            if (selectedHeroes.length === 0) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.className = 'col-span-full text-center text-gray-500';
+                emptyMsg.textContent = 'No abilities to display. Select enemy heroes above.';
+                heroAbilitiesDiv.appendChild(emptyMsg);
+                return;
+            }
+            
+            selectedHeroes.forEach(hero => {
+                const heroColumn = document.createElement('div');
+                heroColumn.className = 'flex flex-col space-y-4';
+                
+                const heroHeader = document.createElement('div');
+                heroHeader.className = 'bg-gray-800 rounded-lg p-4 flex flex-col items-center';
+                heroHeader.innerHTML = `
+                    <div class="hero-icon mb-2" style="background-image: url(${hero.icon})"></div>
+                    <h3 class="font-bold">${hero.name}</h3>
+                    <span class="text-xs text-gray-400">${hero.role}</span>
+                `;
+                heroColumn.appendChild(heroHeader);
+                
+                // Defensive abilities section
+                const defensiveHeader = document.createElement('div');
+                defensiveHeader.className = 'bg-gray-800 rounded-lg p-2 text-center';
+                defensiveHeader.innerHTML = '<h4 class="font-semibold">Defensive</h4>';
+                heroColumn.appendChild(defensiveHeader);
+                
+                const heroDefensiveAbilities = defensiveAbilities.filter(ability => ability.heroId === hero.id);
+                
+                if (heroDefensiveAbilities.length === 0) {
+                    const emptyMsg = document.createElement('div');
+                    emptyMsg.className = 'bg-gray-800 bg-opacity-50 rounded-lg p-2 text-center text-gray-500 text-sm';
+                    emptyMsg.textContent = 'None';
+                    heroColumn.appendChild(emptyMsg);
+                } else {
+                    heroDefensiveAbilities.forEach(ability => {
+                        const abilityCard = createAbilityCard(ability);
+                        heroColumn.appendChild(abilityCard);
+                    });
+                }
+                
+                // Crowd Control abilities section
+                const ccHeader = document.createElement('div');
+                ccHeader.className = 'bg-gray-800 rounded-lg p-2 text-center mt-4';
+                ccHeader.innerHTML = '<h4 class="font-semibold">Crowd Control</h4>';
+                heroColumn.appendChild(ccHeader);
+                
+                const heroCCAbilities = ccAbilities.filter(ability => ability.heroId === hero.id);
+                
+                if (heroCCAbilities.length === 0) {
+                    const emptyMsg = document.createElement('div');
+                    emptyMsg.className = 'bg-gray-800 bg-opacity-50 rounded-lg p-2 text-center text-gray-500 text-sm';
+                    emptyMsg.textContent = 'None';
+                    heroColumn.appendChild(emptyMsg);
+                } else {
+                    heroCCAbilities.forEach(ability => {
+                        const abilityCard = createAbilityCard(ability);
+                        heroColumn.appendChild(abilityCard);
+                    });
+                }
+                
+                heroAbilitiesDiv.appendChild(heroColumn);
+            });
+            
+            for (let i = selectedHeroes.length; i < maxSelectedHeroes; i++) {
+                const emptySlot = document.createElement('div');
+                emptySlot.className = 'bg-gray-800 bg-opacity-30 rounded-lg p-4 flex flex-col items-center justify-center border border-dashed border-gray-700';
+                emptySlot.innerHTML = `<div class="text-gray-500 text-center">Empty Slot</div>`;
+                heroAbilitiesDiv.appendChild(emptySlot);
+            }
+        }
+        
+        // Filter buttons functionality
+        const filterButtons = {
+            all: document.getElementById('filter-all'),
+            duelist: document.getElementById('filter-duelist'),
+            vanguard: document.getElementById('filter-vanguard'),
+            strategist: document.getElementById('filter-strategist')
+        };
+        
+        Object.entries(filterButtons).forEach(([role, button]) => {
+            button.addEventListener('click', () => {
+                Object.values(filterButtons).forEach(btn => {
+                    btn.classList.remove('selected-filter');
+                });
+                button.classList.add('selected-filter');
+                
+                let filteredHeroes;
+                if (role === 'all') {
+                    filteredHeroes = heroes;
+                } else {
+                    filteredHeroes = heroes.filter(hero => hero.role.toLowerCase() === role.toLowerCase());
+                }
+                
+                populateHeroes(filteredHeroes);
+            });
+        });
+        
         // Initialize displays
+        populateHeroes(heroes);
         updateSelectedHeroes();
         updateAbilities();
     </script>

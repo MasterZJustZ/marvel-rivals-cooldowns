@@ -62,6 +62,28 @@
             transition: transform 0.2s, box-shadow 0.2s;
             text-align: center;
             border: 2px solid transparent;
+            position: relative;
+        }
+        
+        .hero-category {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .hero-category.vanguard {
+            background-color: #e74c3c;
+        }
+        
+        .hero-category.duelist {
+            background-color: #f1c40f;
+        }
+        
+        .hero-category.strategist {
+            background-color: #27ae60;
         }
         
         .hero-card:hover {
@@ -294,7 +316,12 @@
         }
         
         .category-toggle:hover {
-            background-color: var(--accent-color);
+            opacity: 0.9;
+        }
+        
+        .active-filter {
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            opacity: 1;
         }
         
         .category-content {
@@ -400,7 +427,16 @@
         </div>
         
         <h2>Select Enemy Heroes</h2>
-        <input type="text" id="heroFilter" class="hero-filter" placeholder="Filter heroes...">
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <input type="text" id="heroFilter" class="hero-filter" placeholder="Filter heroes...">
+            
+            <div style="display: flex; gap: 5px;">
+                <button id="filterAll" class="category-toggle active-filter" style="background-color: #3d7dc9;">All</button>
+                <button id="filterVanguard" class="category-toggle" style="background-color: #e74c3c;">Vanguard</button>
+                <button id="filterDuelist" class="category-toggle" style="background-color: #f1c40f; color: #000;">Duelist</button>
+                <button id="filterStrategist" class="category-toggle" style="background-color: #27ae60;">Strategist</button>
+            </div>
+        </div>
         <div class="hero-selector" id="heroSelector">
             <!-- Heroes will be dynamically inserted here -->
         </div>
@@ -962,162 +998,224 @@
             {
                 id: 'adamwarlock',
                 name: 'Adam Warlock',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'strategist'
             },
             {
                 id: 'blackpanther',
                 name: 'Black Panther',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'blackwidow',
                 name: 'Black Widow',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'captainamerica',
                 name: 'Captain America',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
             },
             {
                 id: 'cloakanddagger',
-                name: 'Cloak and Dagger',
-                image: '/api/placeholder/100/100'
+                name: 'Cloak & Dagger',
+                image: '/api/placeholder/100/100',
+                category: 'strategist'
             },
             {
                 id: 'doctorstrange',
                 name: 'Doctor Strange',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
             },
             {
                 id: 'groot',
                 name: 'Groot',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
             },
             {
                 id: 'hawkeye',
                 name: 'Hawkeye',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'hela',
                 name: 'Hela',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'hulk',
                 name: 'Hulk',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
+            },
+            {
+                id: 'humantorch',
+                name: 'Human Torch',
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
+            },
+            {
+                id: 'invisiblewoman',
+                name: 'Invisible Woman',
+                image: '/api/placeholder/100/100',
+                category: 'strategist'
             },
             {
                 id: 'ironfist',
                 name: 'Iron Fist',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'ironman',
                 name: 'Iron Man',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'jeff',
-                name: 'Jeff',
-                image: '/api/placeholder/100/100'
+                name: 'Jeff the Land Shark',
+                image: '/api/placeholder/100/100',
+                category: 'strategist'
+            },
+            {
+                id: 'loki',
+                name: 'Loki',
+                image: '/api/placeholder/100/100',
+                category: 'strategist'
             },
             {
                 id: 'luna',
                 name: 'Luna Snow',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'strategist'
             },
             {
                 id: 'magik',
                 name: 'Magik',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'magneto',
                 name: 'Magneto',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
             },
             {
                 id: 'mantis',
                 name: 'Mantis',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'strategist'
+            },
+            {
+                id: 'misterfantastic',
+                name: 'Mister Fantastic',
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'moonknight',
                 name: 'Moon Knight',
-                image: '/api/placeholder/100/100'
-            },
-            {
-                id: 'monsterhulk',
-                name: 'Monster Hulk',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'namor',
                 name: 'Namor',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'peniparker',
                 name: 'Peni Parker',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
+            },
+            {
+                id: 'psylocke',
+                name: 'Psylocke',
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'punisher',
-                name: 'Punisher',
-                image: '/api/placeholder/100/100'
+                name: 'The Punisher',
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'rocket',
                 name: 'Rocket Raccoon',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'strategist'
             },
             {
                 id: 'scarletwitch',
                 name: 'Scarlet Witch',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'spiderman',
                 name: 'Spider-Man',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'squirrelgirl',
                 name: 'Squirrel Girl',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'starlord',
                 name: 'Star-Lord',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'storm',
                 name: 'Storm',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
+            },
+            {
+                id: 'thething',
+                name: 'The Thing',
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
             },
             {
                 id: 'thor',
                 name: 'Thor',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
             },
             {
                 id: 'venom',
                 name: 'Venom',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
             },
             {
                 id: 'wintersoldier',
                 name: 'Winter Soldier',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             },
             {
                 id: 'wolverine',
                 name: 'Wolverine',
-                image: '/api/placeholder/100/100'
+                image: '/api/placeholder/100/100',
+                category: 'duelist'
             }
         ];
         
@@ -1136,7 +1234,9 @@
                 heroCard.className = 'hero-card';
                 heroCard.dataset.heroId = hero.id;
                 heroCard.dataset.heroName = hero.name.toLowerCase();
+                heroCard.dataset.heroCategory = hero.category;
                 heroCard.innerHTML = `
+                    <div class="hero-category ${hero.category}"></div>
                     <img src="${hero.image}" alt="${hero.name}" class="hero-image">
                     <div class="hero-name">${hero.name}</div>
                 `;
@@ -1204,14 +1304,43 @@
         // Filter heroes
         function filterHeroes() {
             const filterValue = heroFilter.value.toLowerCase();
+            const activeFilterElement = document.querySelector('.category-toggle.active-filter');
+            let categoryFilter = 'all';
+            
+            if (activeFilterElement) {
+                categoryFilter = activeFilterElement.id.replace('filter', '').toLowerCase();
+            }
             
             document.querySelectorAll('.hero-card').forEach(card => {
                 const heroName = card.dataset.heroName;
-                if (heroName.includes(filterValue)) {
+                const heroCategory = card.dataset.heroCategory;
+                
+                const matchesName = heroName.includes(filterValue);
+                const matchesCategory = categoryFilter === 'all' || heroCategory === categoryFilter;
+                
+                if (matchesName && matchesCategory) {
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
                 }
+            });
+        }
+        
+        // Set up category filter buttons
+        function setupCategoryFilters() {
+            const filterButtons = document.querySelectorAll('.category-toggle');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active-filter'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active-filter');
+                    
+                    // Apply filter
+                    filterHeroes();
+                });
             });
         }
         
@@ -1258,8 +1387,11 @@
             // Add filter event listener
             heroFilter.addEventListener('input', filterHeroes);
             
-            // Add category toggle event listeners
-            document.querySelectorAll('.category-toggle').forEach(button => {
+            // Set up category filters
+            setupCategoryFilters();
+            
+            // Add category toggle event listeners for expanding/collapsing
+            document.querySelectorAll('.category-toggle[data-category]').forEach(button => {
                 button.addEventListener('click', () => {
                     const category = button.dataset.category;
                     toggleCategory(category);

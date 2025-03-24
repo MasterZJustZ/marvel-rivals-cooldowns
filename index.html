@@ -254,6 +254,49 @@
             color: #fff;
         }
         
+        .ability-type.teamup {
+            background-color: #8e44ad;
+            color: #fff;
+        }
+        
+        .hero-abilities-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-ability-card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            height: 100%;
+        }
+        
+        .hero-ability-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+        
+        .hero-ability-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .hero-ability-label {
+            opacity: 0.7;
+        }
+        
+        .hero-ability-value {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
         .cooldown-time {
             color: var(--accent-color);
             font-weight: bold;
@@ -464,7 +507,7 @@
 </head>
 <body>
     <header>
-        <h1>Marvel Rivals Cooldown Tracker v1.5</h1>
+        <h1>Marvel Rivals Cooldown Tracker v1.6</h1>
     </header>
     
     <main>
@@ -498,16 +541,16 @@
             <h2>Important Cooldowns</h2>
             
             <div class="abilities-tabs">
-                <button class="ability-tab" data-tab="heroes">Heroes</button>
-                <button class="ability-tab active" data-tab="all">All Cooldowns</button>
+                <button class="ability-tab active" data-tab="heroes">Heroes</button>
+                <button class="ability-tab" data-tab="all">All Cooldowns</button>
             </div>
             
-            <div class="ability-content" id="heroes-content">
+            <div class="ability-content active" id="heroes-content">
                 <!-- Hero-specific abilities will be generated here -->
                 <div id="hero-abilities-container"></div>
             </div>
             
-            <div class="ability-content active" id="all-content">
+            <div class="ability-content" id="all-content">
                 <!-- Crowd Control Cooldowns -->
                 <div class="cooldown-category">
                     <div class="category-header">
@@ -1581,7 +1624,7 @@
     
     <footer>
         <div class="version-info">
-            <p>Marvel Rivals Cooldown Tracker v1.5 | Updated March 2025</p>
+            <p>Marvel Rivals Cooldown Tracker v1.6 | Updated March 2025</p>
         </div>
     </footer>
     
@@ -1943,6 +1986,9 @@
                 return;
             }
             
+            // Prepare list of selected hero names for team-up checking
+            const selectedHeroNames = selectedHeroes.map(hero => hero.name.toLowerCase());
+            
             // Create a section for each selected hero
             selectedHeroes.forEach(hero => {
                 // Create hero section
@@ -1982,12 +2028,120 @@
                     const list = document.createElement('ul');
                     list.className = 'cooldown-list';
                     
-                    // Add abilities to list
-                    abilities.forEach(ability => {
-                        list.appendChild(ability);
+                        // Create grid layout for abilities
+                    const grid = document.createElement('div');
+                    grid.className = 'hero-ability-grid';
+                    
+                    // Process and add abilities to grid in simpler format
+                    const heroAbilities = [];
+                    abilities.forEach(item => {
+                        // Extract ability data
+                        const abilityName = item.querySelector('.ability-name').textContent;
+                        const abilityType = item.querySelector('.ability-type').textContent;
+                        const abilityTypeClass = item.querySelector('.ability-type').className.split(' ')[1];
+                        const duration = item.querySelector('.effect-duration').textContent;
+                        const cooldown = item.querySelector('.cooldown-time').textContent;
+                        
+                        // Check if it's a team-up ability by looking for keywords in the name
+                        const isTeamUp = 
+                            abilityName.toLowerCase().includes('team-up') || 
+                            abilityName.indexOf('(') > -1 || // Contains parentheses
+                            abilityName.match(/\b(boost|fastball|reborn|bond|soul|chaotic|friends|frozen|ammo|charge)\b/i) !== null;
+                        
+                        // Extract team-up partner if present
+                        let teamUpPartners = [];
+                        if (isTeamUp) {
+                            // Look in predefined pairs
+                            if (TEAMUP_PAIRS[hero.name]) {
+                                teamUpPartners = TEAMUP_PAIRS[hero.name];
+                            }
+                            
+                            // Also try to extract from name
+                            const nameMatch = abilityName.match(/\(([^)]+)\)/);
+                            if (nameMatch && nameMatch[1]) {
+                                const extractedNames = nameMatch[1].split('/');
+                                teamUpPartners = teamUpPartners.concat(extractedNames);
+                            }
+                        }
+                        
+                        // Add to list
+                        heroAbilities.push({
+                            name: abilityName,
+                            type: abilityType,
+                            typeClass: abilityTypeClass,
+                            duration: duration,
+                            cooldown: cooldown,
+                            isTeamUp: isTeamUp,
+                            teamUpPartners: teamUpPartners,
+                            element: item,
+                            html: item.outerHTML
+                        });
                     });
                     
-                    content.appendChild(list);
+                    // Create a 6-column grid
+                    const abilityGrid = document.createElement('div');
+                    abilityGrid.className = 'hero-abilities-grid';
+                    
+                    // Add each ability as a card in the grid
+                    heroAbilities.forEach(ability => {
+                        const hasUltTag = ability.name.includes('Ultimate');
+                        const isUlt = ability.cooldown === 'Ult' || hasUltTag;
+                        
+                        // Skip team-up abilities if the partner is not selected
+                        if (ability.isTeamUp && ability.teamUpPartners.length > 0) {
+                            // Check if any of the team-up partners are selected
+                            const hasPartner = ability.teamUpPartners.some(partner => 
+                                selectedHeroNames.includes(partner.toLowerCase())
+                            );
+                            
+                            // Skip if no partner is selected
+                            if (!hasPartner) {
+                                return; // Skip this ability
+                            }
+                        }
+                        
+                        const card = document.createElement('div');
+                        card.className = 'hero-ability-card';
+                        
+                        // Format ability name - remove partner names from display if it's a team-up
+                        let displayName = ability.name;
+                        if (ability.isTeamUp) {
+                            // Remove parenthetical partner names
+                            displayName = displayName.replace(/\s*\([^)]*\)\s*/, '');
+                        }
+                        
+                        card.innerHTML = `
+                            <div class="hero-ability-name">
+                                ${displayName}
+                                ${isUlt ? '<span class="ultimate-tag">Ultimate</span>' : ''}
+                                ${ability.isTeamUp ? '<span class="ability-type teamup">Team-Up</span>' : ''}
+                            </div>
+                            <div class="hero-ability-detail">
+                                <span class="hero-ability-label">Type:</span>
+                                <span class="hero-ability-value">${ability.type}</span>
+                            </div>
+                            <div class="hero-ability-detail">
+                                <span class="hero-ability-label">Duration:</span>
+                                <span class="hero-ability-value">${ability.duration}</span>
+                            </div>
+                            <div class="hero-ability-detail">
+                                <span class="hero-ability-label">Cooldown:</span>
+                                <span class="hero-ability-value">${ability.cooldown}</span>
+                            </div>
+                        `;
+                        
+                        // If it's a team-up ability, add data attributes
+                        if (ability.isTeamUp) {
+                            card.dataset.teamup = 'true';
+                            if (ability.teamUpPartners.length > 0) {
+                                card.dataset.teamupWith = ability.teamUpPartners.join(',').toLowerCase();
+                            }
+                        }
+                        
+                        abilityGrid.appendChild(card);
+                    });
+                    
+                    content.appendChild(abilityGrid);
                 }
                 
                 // Assemble hero section

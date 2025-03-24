@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvel Rivals Cooldown Reference</title>
+    <title>Marvel Rivals Cooldown Tracker v1.4</title>
     <style>
         :root {
             --primary-color: #f0131e;
@@ -19,6 +19,12 @@
             --slow-color: #f1c40f;
             --blind-color: #95a5a6;
             --defensive-color: #27ae60;
+            --silence-color: #8e44ad;
+            --healing-color: #16a085;
+            --revive-color: #f39c12;
+            --shield-color: #3498db;
+            --mobility-color: #9b59b6;
+            --damage-boost-color: #c0392b;
         }
         
         body {
@@ -223,6 +229,31 @@
             color: #fff;
         }
         
+        .ability-type.healing {
+            background-color: var(--healing-color);
+            color: #fff;
+        }
+        
+        .ability-type.revive {
+            background-color: var(--revive-color);
+            color: #000;
+        }
+        
+        .ability-type.shield {
+            background-color: var(--shield-color);
+            color: #fff;
+        }
+        
+        .ability-type.mobility {
+            background-color: var(--mobility-color);
+            color: #fff;
+        }
+        
+        .ability-type.damage-boost {
+            background-color: var(--damage-boost-color);
+            color: #fff;
+        }
+        
         .cooldown-time {
             color: var(--accent-color);
             font-weight: bold;
@@ -345,6 +376,7 @@
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
         
         .ability-tab {
@@ -388,6 +420,13 @@
             font-size: 0.8rem;
         }
         
+        .version-info {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
         @media (max-width: 768px) {
             .hero-selector {
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -411,12 +450,21 @@
             .ability-hero {
                 min-width: auto;
             }
+            
+            .abilities-tabs {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            
+            .ability-tab {
+                border-radius: 4px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Marvel Rivals Cooldown Reference</h1>
+        <h1>Marvel Rivals Cooldown Tracker v1.4</h1>
     </header>
     
     <main>
@@ -427,10 +475,10 @@
         </div>
         
         <h2>Select Enemy Heroes</h2>
-        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
             <input type="text" id="heroFilter" class="hero-filter" placeholder="Filter heroes...">
             
-            <div style="display: flex; gap: 5px;">
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
                 <button id="filterAll" class="category-toggle active-filter" style="background-color: #3d7dc9;">All</button>
                 <button id="filterVanguard" class="category-toggle" style="background-color: #e74c3c;">Vanguard</button>
                 <button id="filterDuelist" class="category-toggle" style="background-color: #f1c40f; color: #000;">Duelist</button>
@@ -452,6 +500,10 @@
             <div class="abilities-tabs">
                 <button class="ability-tab active" data-tab="cc">Crowd Control</button>
                 <button class="ability-tab" data-tab="defensive">Defensive</button>
+                <button class="ability-tab" data-tab="mobility">Mobility</button>
+                <button class="ability-tab" data-tab="healing">Healing</button>
+                <button class="ability-tab" data-tab="damage">Damage</button>
+                <button class="ability-tab" data-tab="utility">Utility</button>
             </div>
             
             <div class="ability-content active" id="cc-content">
@@ -460,7 +512,7 @@
                     <div class="category-header">
                         <div class="category-title">
                             <div class="category-icon" style="background-color: var(--stun-color);"></div>
-                            <h3>Stuns (6)</h3>
+                            <h3>Stuns</h3>
                         </div>
                         <button class="category-toggle" data-category="stuns">
                             Collapse <span class="toggle-icon">▲</span>
@@ -492,8 +544,8 @@
                                     <div class="ability-name">Cyber Web Snare</div>
                                     <div class="ability-type stun">Stun</div>
                                 </div>
-                                <div class="effect-duration">1s</div>
-                                <div class="cooldown-time">4s</div>
+                                <div class="effect-duration">0.7s</div>
+                                <div class="cooldown-time">3s</div>
                             </li>
                             <li class="cooldown-item">
                                 <div class="cooldown-ability">
@@ -501,7 +553,7 @@
                                     <div class="ability-name">Soul Drainer</div>
                                     <div class="ability-type stun">Stun (AoE)</div>
                                 </div>
-                                <div class="effect-duration">0.5s</div>
+                                <div class="effect-duration">0.3s</div>
                                 <div class="cooldown-time">12s</div>
                             </li>
                             <li class="cooldown-item">
@@ -519,8 +571,8 @@
                                     <div class="ability-name">Absolute Zero</div>
                                     <div class="ability-type stun">Stun</div>
                                 </div>
-                                <div class="effect-duration">3s</div>
-                                <div class="cooldown-time">11s</div>
+                                <div class="effect-duration">2.7s</div>
+                                <div class="cooldown-time">12s</div>
                             </li>
                         </ul>
                     </div>
@@ -530,7 +582,7 @@
                     <div class="category-header">
                         <div class="category-title">
                             <div class="category-icon" style="background-color: var(--sleep-color);"></div>
-                            <h3>Sleeps (2)</h3>
+                            <h3>Sleeps</h3>
                         </div>
                         <button class="category-toggle" data-category="sleeps">
                             Collapse <span class="toggle-icon">▲</span>
@@ -544,7 +596,7 @@
                                     <div class="ability-name">Radioactive Lockdown</div>
                                     <div class="ability-type sleep">Sleep</div>
                                 </div>
-                                <div class="effect-duration">3s</div>
+                                <div class="effect-duration">2s</div>
                                 <div class="cooldown-time">15s</div>
                             </li>
                             <li class="cooldown-item">
@@ -553,7 +605,7 @@
                                     <div class="ability-name">Spore Slumber</div>
                                     <div class="ability-type sleep">Sleep</div>
                                 </div>
-                                <div class="effect-duration">4s</div>
+                                <div class="effect-duration">3.5s</div>
                                 <div class="cooldown-time">15s</div>
                             </li>
                         </ul>
@@ -564,7 +616,7 @@
                     <div class="category-header">
                         <div class="category-title">
                             <div class="category-icon" style="background-color: var(--root-color);"></div>
-                            <h3>Roots (2)</h3>
+                            <h3>Roots</h3>
                         </div>
                         <button class="category-toggle" data-category="roots">
                             Collapse <span class="toggle-icon">▲</span>
@@ -578,7 +630,7 @@
                                     <div class="ability-name">Strangling Prison <span class="ultimate-tag">Ultimate</span></div>
                                     <div class="ability-type root">Root</div>
                                 </div>
-                                <div class="effect-duration">4s</div>
+                                <div class="effect-duration">3.5s</div>
                                 <div class="cooldown-time">Ult</div>
                             </li>
                             <li class="cooldown-item">
@@ -587,7 +639,7 @@
                                     <div class="ability-name">Squirrel Blockade</div>
                                     <div class="ability-type root">Root</div>
                                 </div>
-                                <div class="effect-duration">2s</div>
+                                <div class="effect-duration">1.33s</div>
                                 <div class="cooldown-time">8s</div>
                             </li>
                         </ul>
@@ -598,7 +650,7 @@
                     <div class="category-header">
                         <div class="category-title">
                             <div class="category-icon" style="background-color: var(--displacement-color);"></div>
-                            <h3>Major Displacements (9)</h3>
+                            <h3>Major Displacements</h3>
                         </div>
                         <button class="category-toggle" data-category="major-displacements">
                             Collapse <span class="toggle-icon">▲</span>
@@ -622,16 +674,16 @@
                                     <div class="ability-type major-displacement">Grab</div>
                                 </div>
                                 <div class="effect-duration">-</div>
-                                <div class="cooldown-time">2s</div>
+                                <div class="cooldown-time">1.5s</div>
                             </li>
                             <li class="cooldown-item">
                                 <div class="cooldown-ability">
-                                    <div class="ability-hero">Spiderman</div>
+                                    <div class="ability-hero">Spider-Man</div>
                                     <div class="ability-name">Get Over Here!</div>
                                     <div class="ability-type major-displacement">Grab</div>
                                 </div>
                                 <div class="effect-duration">-</div>
-                                <div class="cooldown-time">7s</div>
+                                <div class="cooldown-time">8s</div>
                             </li>
                             <li class="cooldown-item">
                                 <div class="cooldown-ability">
@@ -662,15 +714,6 @@
                             </li>
                             <li class="cooldown-item">
                                 <div class="cooldown-ability">
-                                    <div class="ability-hero">Winter Soldier</div>
-                                    <div class="ability-name">Tainted Voltage</div>
-                                    <div class="ability-type major-displacement">Knockdown (Air)</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">6s</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
                                     <div class="ability-hero">Wolverine</div>
                                     <div class="ability-name">Feral Leap</div>
                                     <div class="ability-type major-displacement">Grab</div>
@@ -687,174 +730,14 @@
                                 <div class="effect-duration">6s</div>
                                 <div class="cooldown-time">Ult</div>
                             </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="cooldown-category">
-                    <div class="category-header">
-                        <div class="category-title">
-                            <div class="category-icon" style="background-color: var(--displacement-color); opacity: 0.7;"></div>
-                            <h3>Minor Displacements (17)</h3>
-                        </div>
-                        <button class="category-toggle" data-category="minor-displacements">
-                            Collapse <span class="toggle-icon">▲</span>
-                        </button>
-                    </div>
-                    <div class="category-content expand" id="minor-displacements-content">
-                        <ul class="cooldown-list">
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Monster Hulk</div>
-                                    <div class="ability-name">Heavy Blow</div>
-                                    <div class="ability-type minor-displacement">Knockback</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time"><span class="no-cooldown-tag">None</span></div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Magneto</div>
-                                    <div class="ability-name">Mag-Cannon</div>
-                                    <div class="ability-type minor-displacement">Knockback</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">Passive</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Groot</div>
-                                    <div class="ability-name">Furious Flora</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time"><span class="no-cooldown-tag">None</span></div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Captain America</div>
-                                    <div class="ability-name">Freedom Charge <span class="ultimate-tag">Ultimate</span></div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">Ult</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Captain America</div>
-                                    <div class="ability-name">Super Soldier Slam</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">12s</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Peni Parker</div>
-                                    <div class="ability-name">Spider Sweeper <span class="ultimate-tag">Ultimate</span></div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">Ult</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Venom</div>
-                                    <div class="ability-name">Frenzied Arrival</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">8s</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Storm</div>
-                                    <div class="ability-name">Omega Hurricane <span class="ultimate-tag">Ultimate</span></div>
-                                    <div class="ability-type minor-displacement">Pull</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">Ult</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Hawkeye</div>
-                                    <div class="ability-name">Crescent Slash</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">15s</div>
-                            </li>
                             <li class="cooldown-item">
                                 <div class="cooldown-ability">
                                     <div class="ability-hero">Magik</div>
                                     <div class="ability-name">Umbral Incision</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
+                                    <div class="ability-type major-displacement">Launch</div>
                                 </div>
                                 <div class="effect-duration">-</div>
                                 <div class="cooldown-time">8s</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Black Widow</div>
-                                    <div class="ability-name">Edge Dancer</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">13s</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Moon Knight</div>
-                                    <div class="ability-name">Ancient Ankh</div>
-                                    <div class="ability-type minor-displacement">Knockback</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">11s</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Moon Knight</div>
-                                    <div class="ability-name">Triple Eclipse</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time"><span class="no-cooldown-tag">None</span></div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Spiderman</div>
-                                    <div class="ability-name">Amazing Combo</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">6s</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Wolverine</div>
-                                    <div class="ability-name">Last Stand <span class="ultimate-tag">Ultimate</span></div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">Ult</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Iron Fist</div>
-                                    <div class="ability-name">K'un-Lun Kick</div>
-                                    <div class="ability-type minor-displacement">Knockback</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">12s</div>
-                            </li>
-                            <li class="cooldown-item">
-                                <div class="cooldown-ability">
-                                    <div class="ability-hero">Jeff</div>
-                                    <div class="ability-name">Healing Bubble</div>
-                                    <div class="ability-type minor-displacement">Launch Up</div>
-                                </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">6s</div>
                             </li>
                         </ul>
                     </div>
@@ -864,7 +747,7 @@
                     <div class="category-header">
                         <div class="category-title">
                             <div class="category-icon" style="background-color: var(--slow-color);"></div>
-                            <h3>Slows (5)</h3>
+                            <h3>Slows</h3>
                         </div>
                         <button class="category-toggle" data-category="slows">
                             Collapse <span class="toggle-icon">▲</span>
@@ -878,7 +761,7 @@
                                     <div class="ability-name">Cellular Corrosion</div>
                                     <div class="ability-type slow">Slow</div>
                                 </div>
-                                <div class="effect-duration">-</div>
+                                <div class="effect-duration">-15%</div>
                                 <div class="cooldown-time">8s</div>
                             </li>
                             <li class="cooldown-item">
@@ -887,7 +770,7 @@
                                     <div class="ability-name">Hypersonic Arrow</div>
                                     <div class="ability-type slow">Slow</div>
                                 </div>
-                                <div class="effect-duration">-</div>
+                                <div class="effect-duration">-40%, 1s</div>
                                 <div class="cooldown-time">12s</div>
                             </li>
                             <li class="cooldown-item">
@@ -896,7 +779,7 @@
                                     <div class="ability-name">Goddess Boost</div>
                                     <div class="ability-type slow">Slow</div>
                                 </div>
-                                <div class="effect-duration">-</div>
+                                <div class="effect-duration">-15%</div>
                                 <div class="cooldown-time">15s</div>
                             </li>
                             <li class="cooldown-item">
@@ -905,7 +788,7 @@
                                     <div class="ability-name">Electro-Plasma Explosion <span class="ultimate-tag">Ultimate</span></div>
                                     <div class="ability-type slow">Slow</div>
                                 </div>
-                                <div class="effect-duration">-</div>
+                                <div class="effect-duration">-55%</div>
                                 <div class="cooldown-time">Ult</div>
                             </li>
                             <li class="cooldown-item">
@@ -914,8 +797,26 @@
                                     <div class="ability-name">Tainted Voltage</div>
                                     <div class="ability-type slow">Slow</div>
                                 </div>
-                                <div class="effect-duration">-</div>
+                                <div class="effect-duration">-35%, 2s</div>
                                 <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Invisible Woman</div>
+                                    <div class="ability-name">Guardian Shield</div>
+                                    <div class="ability-type slow">Slow</div>
+                                </div>
+                                <div class="effect-duration">-30%, 3s</div>
+                                <div class="cooldown-time">Variable</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Scarlet Witch</div>
+                                    <div class="ability-name">Reality Erasure <span class="ultimate-tag">Ultimate</span></div>
+                                    <div class="ability-type slow">Slow</div>
+                                </div>
+                                <div class="effect-duration">Up to -35%</div>
+                                <div class="cooldown-time">Ult</div>
                             </li>
                         </ul>
                     </div>
@@ -925,7 +826,7 @@
                     <div class="category-header">
                         <div class="category-title">
                             <div class="category-icon" style="background-color: var(--blind-color);"></div>
-                            <h3>Blinds (2)</h3>
+                            <h3>Blinds</h3>
                         </div>
                         <button class="category-toggle" data-category="blinds">
                             Collapse <span class="toggle-icon">▲</span>
@@ -939,7 +840,7 @@
                                     <div class="ability-name">Terror Cape</div>
                                     <div class="ability-type blind">Blind</div>
                                 </div>
-                                <div class="effect-duration">-</div>
+                                <div class="effect-duration">1.5s</div>
                                 <div class="cooldown-time">12s</div>
                             </li>
                             <li class="cooldown-item">
@@ -948,7 +849,7 @@
                                     <div class="ability-name">Scourge Grenade</div>
                                     <div class="ability-type blind">Vision Block</div>
                                 </div>
-                                <div class="effect-duration">-</div>
+                                <div class="effect-duration">1.2s</div>
                                 <div class="cooldown-time">8s</div>
                             </li>
                         </ul>
@@ -957,11 +858,11 @@
             </div>
             
             <div class="ability-content" id="defensive-content">
-                <!-- Defensive Cooldowns will go here -->
+                <!-- Defensive Cooldowns -->
                 <div class="cooldown-category">
                     <div class="category-header">
                         <div class="category-title">
-                            <div class="category-icon" style="background-color: var(--defensive-color);"></div>
+                            <div class="category-icon" style="background-color: var(--shield-color);"></div>
                             <h3>Shields & Barriers</h3>
                         </div>
                         <button class="category-toggle" data-category="shields">
@@ -974,23 +875,714 @@
                                 <div class="cooldown-ability">
                                     <div class="ability-hero">Magneto</div>
                                     <div class="ability-name">Magnetic Barrier</div>
-                                    <div class="ability-type defensive">Shield</div>
+                                    <div class="ability-type shield">Shield</div>
                                 </div>
-                                <div class="effect-duration">-</div>
-                                <div class="cooldown-time">16s</div>
+                                <div class="effect-duration">Unlimited</div>
+                                <div class="cooldown-time">9.1s</div>
                             </li>
-                            <!-- More defensive abilities will be added here -->
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Captain America</div>
+                                    <div class="ability-name">Living Legend</div>
+                                    <div class="ability-type shield">Shield</div>
+                                </div>
+                                <div class="effect-duration">400 HP</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Doctor Strange</div>
+                                    <div class="ability-name">Shield of the Seraphim</div>
+                                    <div class="ability-type shield">Shield</div>
+                                </div>
+                                <div class="effect-duration">800 HP</div>
+                                <div class="cooldown-time">10s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Iron Fist</div>
+                                    <div class="ability-name">Dragon's Defense</div>
+                                    <div class="ability-type shield">Shield</div>
+                                </div>
+                                <div class="effect-duration">1s</div>
+                                <div class="cooldown-time">15s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Invisible Woman</div>
+                                    <div class="ability-name">Guardian Shield</div>
+                                    <div class="ability-type shield">Shield</div>
+                                </div>
+                                <div class="effect-duration">300 HP</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Hulk</div>
+                                    <div class="ability-name">Indestructible Guard</div>
+                                    <div class="ability-type shield">Shield</div>
+                                </div>
+                                <div class="effect-duration">2.5s</div>
+                                <div class="cooldown-time">12s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Groot</div>
+                                    <div class="ability-name">Thornlash Wall</div>
+                                    <div class="ability-type shield">Shield</div>
+                                </div>
+                                <div class="effect-duration">250 HP</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Groot</div>
+                                    <div class="ability-name">Ironwood Wall</div>
+                                    <div class="ability-type shield">Shield</div>
+                                </div>
+                                <div class="effect-duration">700 HP</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Magneto</div>
+                                    <div class="ability-name">Metal Bulwark</div>
+                                    <div class="ability-type shield">Shield</div>
+                                </div>
+                                <div class="effect-duration">300 HP</div>
+                                <div class="cooldown-time">12s</div>
+                            </li>
                         </ul>
                     </div>
                 </div>
                 
-                <div class="team-info">
-                    <h3>Note</h3>
-                    <p class="info-text">Defensive cooldowns section will be expanded in the next update.</p>
+                <div class="cooldown-category">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <div class="category-icon" style="background-color: var(--defensive-color);"></div>
+                            <h3>Damage Reduction</h3>
+                        </div>
+                        <button class="category-toggle" data-category="damage-reduction">
+                            Collapse <span class="toggle-icon">▲</span>
+                        </button>
+                    </div>
+                    <div class="category-content expand" id="damage-reduction-content">
+                        <ul class="cooldown-list">
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Captain America</div>
+                                    <div class="ability-name">Living Legend</div>
+                                    <div class="ability-type defensive">Damage Reduction</div>
+                                </div>
+                                <div class="effect-duration">50%</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Iron Fist</div>
+                                    <div class="ability-name">Dragon's Defense</div>
+                                    <div class="ability-type defensive">Damage Reduction</div>
+                                </div>
+                                <div class="effect-duration">30%, 1s</div>
+                                <div class="cooldown-time">15s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">The Thing</div>
+                                    <div class="ability-name">Embattled Leap</div>
+                                    <div class="ability-type defensive">Damage Reduction</div>
+                                </div>
+                                <div class="effect-duration">30%, 3s</div>
+                                <div class="cooldown-time">10s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Wolverine</div>
+                                    <div class="ability-name">Undying Howl</div>
+                                    <div class="ability-type defensive">Damage Reduction</div>
+                                </div>
+                                <div class="effect-duration">40%, 5s</div>
+                                <div class="cooldown-time">16s</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="cooldown-category">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <div class="category-icon" style="background-color: var(--revive-color);"></div>
+                            <h3>Invulnerability</h3>
+                        </div>
+                        <button class="category-toggle" data-category="invulnerability">
+                            Collapse <span class="toggle-icon">▲</span>
+                        </button>
+                    </div>
+                    <div class="category-content expand" id="invulnerability-content">
+                        <ul class="cooldown-list">
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Psylocke</div>
+                                    <div class="ability-name">Stepping Discs</div>
+                                    <div class="ability-type defensive">Invulnerable</div>
+                                </div>
+                                <div class="effect-duration">0.83s</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Magik</div>
+                                    <div class="ability-name">Stepping Discs</div>
+                                    <div class="ability-type defensive">Invulnerable</div>
+                                </div>
+                                <div class="effect-duration">0.83s</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Scarlet Witch</div>
+                                    <div class="ability-name">Mystic Projection</div>
+                                    <div class="ability-type defensive">Invulnerable</div>
+                                </div>
+                                <div class="effect-duration">2s</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Hela</div>
+                                    <div class="ability-name">Astral Flock</div>
+                                    <div class="ability-type defensive">Invulnerable</div>
+                                </div>
+                                <div class="effect-duration">1.2s</div>
+                                <div class="cooldown-time">12s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Venom</div>
+                                    <div class="ability-name">Suit Expulsion</div>
+                                    <div class="ability-type defensive">Invulnerable</div>
+                                </div>
+                                <div class="effect-duration">1s</div>
+                                <div class="cooldown-time">30s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Spider-Man</div>
+                                    <div class="ability-name">Suit Expulsion</div>
+                                    <div class="ability-type defensive">Invulnerable</div>
+                                </div>
+                                <div class="effect-duration">1s</div>
+                                <div class="cooldown-time">30s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Peni Parker</div>
+                                    <div class="ability-name">Armor Expulsion</div>
+                                    <div class="ability-type defensive">Invulnerable</div>
+                                </div>
+                                <div class="effect-duration">2s</div>
+                                <div class="cooldown-time">30s</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ability-content" id="mobility-content">
+                <!-- Mobility Cooldowns -->
+                <div class="cooldown-category">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <div class="category-icon" style="background-color: var(--mobility-color);"></div>
+                            <h3>Dashes & Teleports</h3>
+                        </div>
+                        <button class="category-toggle" data-category="dashes">
+                            Collapse <span class="toggle-icon">▲</span>
+                        </button>
+                    </div>
+                    <div class="category-content expand" id="dashes-content">
+                        <ul class="cooldown-list">
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Black Panther</div>
+                                    <div class="ability-name">Spirit Rend</div>
+                                    <div class="ability-type mobility">Dash</div>
+                                </div>
+                                <div class="effect-duration">15m</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Black Panther</div>
+                                    <div class="ability-name">Spinning Kick</div>
+                                    <div class="ability-type mobility">Dash</div>
+                                </div>
+                                <div class="effect-duration">16m</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Captain America</div>
+                                    <div class="ability-name">Liberty Rush</div>
+                                    <div class="ability-type mobility">Dash</div>
+                                </div>
+                                <div class="effect-duration">12m</div>
+                                <div class="cooldown-time">10s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Doctor Strange</div>
+                                    <div class="ability-name">Cloak of Levitation</div>
+                                    <div class="ability-type mobility">Flight</div>
+                                </div>
+                                <div class="effect-duration">6s</div>
+                                <div class="cooldown-time">15s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Hawkeye</div>
+                                    <div class="ability-name">Skyward Leap</div>
+                                    <div class="ability-type mobility">Double Jump</div>
+                                </div>
+                                <div class="effect-duration">-</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Human Torch</div>
+                                    <div class="ability-name">Plasma Body</div>
+                                    <div class="ability-type mobility">Movement Boost</div>
+                                </div>
+                                <div class="effect-duration">+50%, 8s max</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Magik</div>
+                                    <div class="ability-name">Stepping Discs</div>
+                                    <div class="ability-type mobility">Teleport</div>
+                                </div>
+                                <div class="effect-duration">10m</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Magik</div>
+                                    <div class="ability-name">Umbral Incision</div>
+                                    <div class="ability-type mobility">Dash</div>
+                                </div>
+                                <div class="effect-duration">16m</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Moon Knight</div>
+                                    <div class="ability-name">Moonlight Hook</div>
+                                    <div class="ability-type mobility">Grapple</div>
+                                </div>
+                                <div class="effect-duration">25m</div>
+                                <div class="cooldown-time">15s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Psylocke</div>
+                                    <div class="ability-name">Psi-Blade Dash</div>
+                                    <div class="ability-type mobility">Dash</div>
+                                </div>
+                                <div class="effect-duration">12m</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Rocket Raccoon</div>
+                                    <div class="ability-name">Jetpack Dash</div>
+                                    <div class="ability-type mobility">Dash</div>
+                                </div>
+                                <div class="effect-duration">10m</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Spider-Man</div>
+                                    <div class="ability-name">Web Swing</div>
+                                    <div class="ability-type mobility">Grapple</div>
+                                </div>
+                                <div class="effect-duration">30m</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Star-Lord</div>
+                                    <div class="ability-name">Rocket Propulsion</div>
+                                    <div class="ability-type mobility">Flight</div>
+                                </div>
+                                <div class="effect-duration">+100%, 6s max</div>
+                                <div class="cooldown-time">18s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Venom</div>
+                                    <div class="ability-name">Venom Swing</div>
+                                    <div class="ability-type mobility">Grapple</div>
+                                </div>
+                                <div class="effect-duration">30m</div>
+                                <div class="cooldown-time">8s</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ability-content" id="healing-content">
+                <!-- Healing Cooldowns -->
+                <div class="cooldown-category">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <div class="category-icon" style="background-color: var(--healing-color);"></div>
+                            <h3>Healing Abilities</h3>
+                        </div>
+                        <button class="category-toggle" data-category="healing">
+                            Collapse <span class="toggle-icon">▲</span>
+                        </button>
+                    </div>
+                    <div class="category-content expand" id="healing-content-list">
+                        <ul class="cooldown-list">
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Adam Warlock</div>
+                                    <div class="ability-name">Avatar Life Stream</div>
+                                    <div class="ability-type healing">Healing</div>
+                                </div>
+                                <div class="effect-duration">95 HP</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Cloak & Dagger</div>
+                                    <div class="ability-name">Dagger Storm</div>
+                                    <div class="ability-type healing">Healing</div>
+                                </div>
+                                <div class="effect-duration">55/s, 6s</div>
+                                <div class="cooldown-time">12s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Iron Fist</div>
+                                    <div class="ability-name">Harmony Recovery</div>
+                                    <div class="ability-type healing">Healing</div>
+                                </div>
+                                <div class="effect-duration">100/s, 3s</div>
+                                <div class="cooldown-time">12s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Invisible Woman</div>
+                                    <div class="ability-name">Guardian Shield</div>
+                                    <div class="ability-type healing">Healing</div>
+                                </div>
+                                <div class="effect-duration">50/s</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Jeff</div>
+                                    <div class="ability-name">Healing Bubble</div>
+                                    <div class="ability-type healing">Healing</div>
+                                </div>
+                                <div class="effect-duration">85 HP</div>
+                                <div class="cooldown-time">6s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Luna Snow</div>
+                                    <div class="ability-name">Share the Stage</div>
+                                    <div class="ability-type healing">Healing Boost</div>
+                                </div>
+                                <div class="effect-duration">+35%</div>
+                                <div class="cooldown-time">None</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Mantis</div>
+                                    <div class="ability-name">Healing Flower</div>
+                                    <div class="ability-type healing">Healing</div>
+                                </div>
+                                <div class="effect-duration">55 + 20/s, 8s</div>
+                                <div class="cooldown-time">1 Orb</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Rocket Raccoon</div>
+                                    <div class="ability-name">Repair Mode</div>
+                                    <div class="ability-type healing">Healing</div>
+                                </div>
+                                <div class="effect-duration">70/s</div>
+                                <div class="cooldown-time">Ammo</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Venom</div>
+                                    <div class="ability-name">Symbiotic Resilience</div>
+                                    <div class="ability-type healing">Healing</div>
+                                </div>
+                                <div class="effect-duration">120% of lost</div>
+                                <div class="cooldown-time">15s</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="cooldown-category">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <div class="category-icon" style="background-color: var(--revive-color);"></div>
+                            <h3>Resurrection Abilities</h3>
+                        </div>
+                        <button class="category-toggle" data-category="revives">
+                            Collapse <span class="toggle-icon">▲</span>
+                        </button>
+                    </div>
+                    <div class="category-content expand" id="revives-content">
+                        <ul class="cooldown-list">
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Adam Warlock</div>
+                                    <div class="ability-name">Karmic Revival <span class="ultimate-tag">Ultimate</span></div>
+                                    <div class="ability-type revive">Team Revive</div>
+                                </div>
+                                <div class="effect-duration">10s window</div>
+                                <div class="cooldown-time">Ult</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Adam Warlock</div>
+                                    <div class="ability-name">Regenerative Cocoon</div>
+                                    <div class="ability-type revive">Self Revive</div>
+                                </div>
+                                <div class="effect-duration">5s window</div>
+                                <div class="cooldown-time">105s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Rocket Raccoon</div>
+                                    <div class="ability-name">B.R.B.</div>
+                                    <div class="ability-type revive">Ally Revive</div>
+                                </div>
+                                <div class="effect-duration">50m radius</div>
+                                <div class="cooldown-time">45s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Wolverine</div>
+                                    <div class="ability-name">Regenerative Healing Factor</div>
+                                    <div class="ability-type revive">Self Revive</div>
+                                </div>
+                                <div class="effect-duration">3s</div>
+                                <div class="cooldown-time">90s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Hela</div>
+                                    <div class="ability-name">Queen of Hel</div>
+                                    <div class="ability-type revive">Ally Revive</div>
+                                </div>
+                                <div class="effect-duration">On kill</div>
+                                <div class="cooldown-time">None</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ability-content" id="damage-content">
+                <!-- Damage Cooldowns -->
+                <div class="cooldown-category">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <div class="category-icon" style="background-color: var(--damage-boost-color);"></div>
+                            <h3>Damage Boosts</h3>
+                        </div>
+                        <button class="category-toggle" data-category="damage-boosts">
+                            Collapse <span class="toggle-icon">▲</span>
+                        </button>
+                    </div>
+                    <div class="category-content expand" id="damage-boosts-content">
+                        <ul class="cooldown-list">
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Black Panther</div>
+                                    <div class="ability-name">Panther's Cunning</div>
+                                    <div class="ability-type damage-boost">Damage Boost</div>
+                                </div>
+                                <div class="effect-duration">+20% below 100HP</div>
+                                <div class="cooldown-time">Passive</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Cloak</div>
+                                    <div class="ability-name">Terror Cape</div>
+                                    <div class="ability-type damage-boost">Vulnerability</div>
+                                </div>
+                                <div class="effect-duration">+28%, 3s</div>
+                                <div class="cooldown-time">12s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Iron Man</div>
+                                    <div class="ability-name">Armor Overdrive</div>
+                                    <div class="ability-type damage-boost">Damage Boost</div>
+                                </div>
+                                <div class="effect-duration">10s</div>
+                                <div class="cooldown-time">20s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Iron Fist</div>
+                                    <div class="ability-name">Living Chi <span class="ultimate-tag">Ultimate</span></div>
+                                    <div class="ability-type damage-boost">Damage Boost</div>
+                                </div>
+                                <div class="effect-duration">+30%</div>
+                                <div class="cooldown-time">Ult</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Luna Snow</div>
+                                    <div class="ability-name">Fate of Both Worlds <span class="ultimate-tag">Ultimate</span></div>
+                                    <div class="ability-type damage-boost">Damage Boost</div>
+                                </div>
+                                <div class="effect-duration">+40%, 12s</div>
+                                <div class="cooldown-time">Ult</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Mantis</div>
+                                    <div class="ability-name">Allied Inspiration</div>
+                                    <div class="ability-type damage-boost">Damage Boost</div>
+                                </div>
+                                <div class="effect-duration">+12%, 8s</div>
+                                <div class="cooldown-time">1 Orb</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Rocket Raccoon</div>
+                                    <div class="ability-name">C.Y.A. <span class="ultimate-tag">Ultimate</span></div>
+                                    <div class="ability-type damage-boost">Damage Boost</div>
+                                </div>
+                                <div class="effect-duration">+40%, 12s</div>
+                                <div class="cooldown-time">Ult</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Star-Lord</div>
+                                    <div class="ability-name">Ammo Invention</div>
+                                    <div class="ability-type damage-boost">Infinite Ammo</div>
+                                </div>
+                                <div class="effect-duration">12s</div>
+                                <div class="cooldown-time">40s</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ability-content" id="utility-content">
+                <!-- Utility Cooldowns -->
+                <div class="cooldown-category">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <div class="category-icon" style="background-color: var(--accent-color);"></div>
+                            <h3>Utility Abilities</h3>
+                        </div>
+                        <button class="category-toggle" data-category="utility">
+                            Collapse <span class="toggle-icon">▲</span>
+                        </button>
+                    </div>
+                    <div class="category-content expand" id="utility-content-list">
+                        <ul class="cooldown-list">
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Doctor Strange</div>
+                                    <div class="ability-name">Pentagram of Farallah</div>
+                                    <div class="ability-type utility">Portal</div>
+                                </div>
+                                <div class="effect-duration">20s</div>
+                                <div class="cooldown-time">180s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Loki</div>
+                                    <div class="ability-name">Doppelganger</div>
+                                    <div class="ability-type utility">Clone</div>
+                                </div>
+                                <div class="effect-duration">60s</div>
+                                <div class="cooldown-time">12s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Loki</div>
+                                    <div class="ability-name">Deception</div>
+                                    <div class="ability-type utility">Invisibility</div>
+                                </div>
+                                <div class="effect-duration">Unlimited</div>
+                                <div class="cooldown-time">15s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Loki</div>
+                                    <div class="ability-name">Devious Exchange</div>
+                                    <div class="ability-type utility">Swap</div>
+                                </div>
+                                <div class="effect-duration">-</div>
+                                <div class="cooldown-time">15s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Magik</div>
+                                    <div class="ability-name">Darkchild <span class="ultimate-tag">Ultimate</span></div>
+                                    <div class="ability-type utility">Transformation</div>
+                                </div>
+                                <div class="effect-duration">12s</div>
+                                <div class="cooldown-time">Ult</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Loki</div>
+                                    <div class="ability-name">God of Mischief <span class="ultimate-tag">Ultimate</span></div>
+                                    <div class="ability-type utility">Copy Hero</div>
+                                </div>
+                                <div class="effect-duration">15s</div>
+                                <div class="cooldown-time">Ult</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Peni Parker</div>
+                                    <div class="ability-name">Bionic Spider Nest</div>
+                                    <div class="ability-type utility">Turret</div>
+                                </div>
+                                <div class="effect-duration">Until destroyed</div>
+                                <div class="cooldown-time">15s</div>
+                            </li>
+                            <li class="cooldown-item">
+                                <div class="cooldown-ability">
+                                    <div class="ability-hero">Peni Parker</div>
+                                    <div class="ability-name">Cyber-Bond</div>
+                                    <div class="ability-type utility">Tether</div>
+                                </div>
+                                <div class="effect-duration">Until released</div>
+                                <div class="cooldown-time">3s</div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+    
+    <footer>
+        <div class="version-info">
+            <p>Marvel Rivals Cooldown Tracker v1.4 | Updated March 2025</p>
+        </div>
+    </footer>
     
     <script>
         // Hero data with abilities and cooldowns
@@ -1012,6 +1604,12 @@
                 name: 'Black Widow',
                 image: '/api/placeholder/100/100',
                 category: 'duelist'
+            },
+            {
+                id: 'bruce',
+                name: 'Bruce Banner',
+                image: '/api/placeholder/100/100',
+                category: 'vanguard'
             },
             {
                 id: 'captainamerica',
@@ -1257,12 +1855,14 @@
                     selectedHeroes.push(hero);
                     heroCard.classList.add('selected');
                     updateTeamDisplay();
+                    updateCooldownDisplay();
                 }
             } else {
                 // Remove hero
                 selectedHeroes.splice(index, 1);
                 heroCard.classList.remove('selected');
                 updateTeamDisplay();
+                updateCooldownDisplay();
             }
         }
         
@@ -1301,6 +1901,53 @@
             });
         }
         
+        // Update cooldown display based on selected heroes
+        function updateCooldownDisplay() {
+            // If no heroes are selected, show all cooldowns
+            if (selectedHeroes.length === 0) {
+                document.querySelectorAll('.cooldown-item').forEach(item => {
+                    item.style.display = 'flex';
+                });
+                return;
+            }
+            
+            // Get selected hero names
+            const selectedHeroNames = selectedHeroes.map(hero => hero.name.toLowerCase());
+            
+            // Show only cooldowns for selected heroes
+            document.querySelectorAll('.cooldown-item').forEach(item => {
+                const heroName = item.querySelector('.ability-hero').textContent.toLowerCase();
+                if (selectedHeroNames.some(name => heroName.includes(name))) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Update category counts
+            updateCategoryCounts();
+        }
+        
+        // Update category counts based on visible items
+        function updateCategoryCounts() {
+            document.querySelectorAll('.cooldown-category').forEach(category => {
+                const title = category.querySelector('h3');
+                const items = category.querySelectorAll('.cooldown-item');
+                const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
+                
+                // Update title with count
+                const originalTitle = title.textContent.split(' (')[0];
+                title.textContent = `${originalTitle} (${visibleItems.length})`;
+                
+                // Hide categories with no visible items
+                if (visibleItems.length === 0) {
+                    category.style.display = 'none';
+                } else {
+                    category.style.display = 'block';
+                }
+            });
+        }
+        
         // Filter heroes
         function filterHeroes() {
             const filterValue = heroFilter.value.toLowerCase();
@@ -1328,7 +1975,7 @@
         
         // Set up category filter buttons
         function setupCategoryFilters() {
-            const filterButtons = document.querySelectorAll('.category-toggle');
+            const filterButtons = document.querySelectorAll('.filter-buttons .category-toggle');
             
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -1377,6 +2024,9 @@
             // Activate the selected tab and content
             document.getElementById(`${tabId}-content`).classList.add('active');
             document.querySelector(`.ability-tab[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Update category counts for the newly visible tab
+            updateCategoryCounts();
         }
         
         // Initialize the app
@@ -1387,8 +2037,15 @@
             // Add filter event listener
             heroFilter.addEventListener('input', filterHeroes);
             
-            // Set up category filters
-            setupCategoryFilters();
+            // Set up hero category filter buttons
+            const filterButtons = document.querySelectorAll('[id^="filter"]');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active-filter'));
+                    button.classList.add('active-filter');
+                    filterHeroes();
+                });
+            });
             
             // Add category toggle event listeners for expanding/collapsing
             document.querySelectorAll('.category-toggle[data-category]').forEach(button => {
@@ -1405,10 +2062,13 @@
                     switchTab(tabId);
                 });
             });
+            
+            // Calculate and display initial category counts
+            updateCategoryCounts();
         }
         
         // Start the app
-        init();
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>

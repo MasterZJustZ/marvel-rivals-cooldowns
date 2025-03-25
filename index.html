@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvel Rivals Cooldown Tracker</title>
+    <title>Marvel Rivals Cooldown Tracker v0.0.4</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
         .hero-icon{width:80px;height:80px;background-size:cover;cursor:pointer;transition:all .2s;opacity:.6;position:relative;margin:auto;}
         .hero-icon:hover{transform:scale(1.1);opacity:.8}
         .hero-icon.selected{opacity:1;box-shadow:0 0 0 3px #f59e0b}
-        .hero-name{position:absolute;bottom:-25px;left:0;right:0;text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .hero-name{position:absolute;bottom:-25px;left:0;right:0;text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;}
         .selected-filter{background-color:#4B5563!important;font-weight:700}
         .cooldown-text{font-size:12px;text-align:center;padding:2px 5px;border-radius:4px}
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-center mb-2">Marvel Rivals Cooldown Tracker</h1>
+        <h1 class="text-4xl font-bold text-center mb-2">Marvel Rivals Cooldown Tracker v0.0.4</h1>
         <p class="text-center text-gray-400 mb-8">Select heroes to track their cooldowns</p>
         <div class="mb-8">
             <h2 class="text-2xl font-bold mb-4">Select Heroes</h2>
             <div class="mb-4 flex gap-2">
                 <button id="filter-all" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md selected-filter">All</button>
-                <button id="filter-duelist" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Duelist</button>
                 <button id="filter-vanguard" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Vanguard</button>
+                <button id="filter-duelist" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Duelist</button>
                 <button id="filter-strategist" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">Strategist</button>
             </div>
             <div class="hero-selection grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 mb-12"></div>
@@ -240,7 +240,16 @@
                 return;
             }
             
-            selectedHeroes.forEach(hero => {
+            // Sort heroes by role (Vanguard, Duelist, Strategist) and then alphabetically
+            const sortedHeroes = [...selectedHeroes].sort((a, b) => {
+                const roleOrder = { 'Vanguard': 1, 'Duelist': 2, 'Strategist': 3 };
+                if (roleOrder[a.role] !== roleOrder[b.role]) {
+                    return roleOrder[a.role] - roleOrder[b.role];
+                }
+                return a.name.localeCompare(b.name);
+            });
+            
+            sortedHeroes.forEach(hero => {
                 const heroColumn = document.createElement('div');
                 heroColumn.className = 'flex flex-col space-y-4';
                 
